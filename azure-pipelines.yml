@@ -22,6 +22,8 @@ steps:
   inputs:
     command: 'restore'
     restoreArguments: '--disable-parallel'
+    feedsToUse: 'config'
+    nugetConfigPath: './nuget.config'
 
 - task: DotNetCoreCLI@2
   displayName: dotnet build
