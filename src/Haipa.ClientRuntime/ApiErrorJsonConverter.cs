@@ -1,5 +1,6 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for license information.
+﻿// Copyright (c) dbosoft GmbH and Haipa contributors. All rights reserved.
+// Forked from https://github.com/Azure/azure-sdk-for-net/tree/master/sdk/mgmtcommon/ClientRuntime/ClientRuntime
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System;
 using System.Linq;
@@ -9,9 +10,9 @@ using Newtonsoft.Json.Linq;
 namespace Haipa.ClientRuntime
 {
     /// <summary>
-    /// JsonConverter that provides custom deserialization for CloudError objects.
+    /// JsonConverter that provides custom deserialization for ApiError objects.
     /// </summary>
-    public class HaipaErrorJsonConverter : JsonConverter
+    public class ApiErrorJsonConverter : JsonConverter
     {
         private const string ErrorNode = "error";
 
@@ -22,7 +23,7 @@ namespace Haipa.ClientRuntime
         /// <returns>True if the object being serialized is a CloudError. False otherwise.</returns>
         public override bool CanConvert(Type objectType)
         {
-            return typeof(HaipaError) == objectType;
+            return typeof(ApiError) == objectType;
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Haipa.ClientRuntime
             {
                 jObject = errorObject.Value as JObject;
             }
-            return jObject.ToObject<HaipaError>(serializer.WithoutConverter(this));
+            return jObject.ToObject<ApiError>(serializer.WithoutConverter(this));
         }
 
         /// <summary>

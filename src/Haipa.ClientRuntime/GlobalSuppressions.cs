@@ -1,5 +1,6 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for license information.
+﻿// Copyright (c) dbosoft GmbH and Haipa contributors. All rights reserved.
+// Forked from https://github.com/Azure/azure-sdk-for-net/tree/master/sdk/mgmtcommon/ClientRuntime/ClientRuntime
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Microsoft.Rest.Azure.OData", Justification = "OData specific extensions.")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Scope = "member", Target = "Microsoft.Rest.Azure.AzureClientExtensions.#GetPutOrPatchOperationResultAsync`1(Microsoft.Rest.Azure.IAzureClient,Microsoft.Rest.Azure.AzureOperationResponse`1<!!0>,System.Func`1<System.Threading.Tasks.Task`1<Microsoft.Rest.Azure.AzureOperationResponse`1<!!0>>>,System.Threading.CancellationToken)", Justification = "Necessary to support service clients.")]
