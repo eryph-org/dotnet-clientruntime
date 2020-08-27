@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Haipa.IdentityModel.Clients;
@@ -16,8 +17,8 @@ namespace Haipa.ClientRuntime.Authentication
 
         public Task<AccessTokenResponse> AuthenticateAsync(string audience, IEnumerable<string> scopes)
         {
-            using(var httpClient = new HttpClient())
-                return _haipaClient.GetAccessToken(audience, scopes, httpClient);
+            using (var httpClient = new HttpClient{BaseAddress = new Uri(audience)})
+                return httpClient.GetClientAccessToken(_haipaClient.Id, _haipaClient.KeyPair.ToRSAParameters(), scopes);
         }
     }
 }
