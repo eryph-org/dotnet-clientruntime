@@ -86,7 +86,7 @@ namespace Haipa.ClientRuntime.Authentication
         public static Task<ServiceClientCredentials> LogonWithHaipaClient(IEnumerable<string> scopes)
         {
             var clientLookup = new ClientLookup();
-            return LogonWithHaipaClient(clientLookup.GetClient(), scopes);
+            return LogonWithHaipaClient(clientLookup.FindClient(), scopes);
         }
     }
 }
