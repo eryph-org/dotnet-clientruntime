@@ -39,7 +39,7 @@ namespace Haipa.ClientRuntime.Configuration
 
             if (currentClientData == null)
             {
-                throw new InvalidOperationException($"Client with id '{Id}' not found in configuration '{Configuration}'.");
+                throw new InvalidOperationException($"Client with id '{Id}' not found in configuration '{GetConfigurationName()}'.");
             }
 
             var storesWriter = GetStoresWriter();

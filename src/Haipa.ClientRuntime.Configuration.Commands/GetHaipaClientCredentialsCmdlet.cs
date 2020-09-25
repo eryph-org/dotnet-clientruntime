@@ -38,7 +38,7 @@ namespace Haipa.ClientRuntime.Configuration
                 {
                     throw new InvalidOperationException(
 $@"The system client cannot be requested for configuration '{configName}'.
-System client can only be using with the configuration 'zero' or 'local'.
+System client is only available for configurations 'zero' and 'local'.
 To set the configuration use the parameter Configuration or set a default configuration with cmdlet Set-HaipaConfigurationStore.");
                 }
 

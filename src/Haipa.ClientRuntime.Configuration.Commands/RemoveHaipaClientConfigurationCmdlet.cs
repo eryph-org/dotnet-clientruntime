@@ -1,4 +1,5 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Management.Automation;
 using JetBrains.Annotations;
 
 namespace Haipa.ClientRuntime.Configuration
@@ -25,6 +26,16 @@ namespace Haipa.ClientRuntime.Configuration
 
         protected override void ProcessRecord()
         {
+            var storesReader = GetStoresReader();
+
+            var currentClientData = storesReader.GetClientById(Id);
+
+            if (currentClientData == null)
+            {
+                throw new InvalidOperationException($"Client with id '{Id}' not found in configuration '{GetConfigurationName()}'.");
+            }
+
+
             var storesWriter = GetStoresWriter();
             storesWriter.RemoveClient(Id);
             if(storesWriter.GetDefaultClientId()==Id)
