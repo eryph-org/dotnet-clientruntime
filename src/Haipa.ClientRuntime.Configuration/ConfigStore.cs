@@ -51,7 +51,7 @@ namespace Haipa.ClientRuntime.Configuration
                 let keyFileName = Path.Combine(StorePath, "private", $"{client.Id}.key")
                 where _environment.FileSystem.FileExists(keyFileName)
                 let keyPairData = PrivateKey.ToSecureString(PrivateKey.ReadFile(keyFileName, _environment.FileSystem))
-                select new ClientCredentials(client.Id, keyPairData, identityProvider);
+                select new ClientCredentials(client.Id, keyPairData, identityProvider, _configName);
         }
 
         private ClientConfig GetSettings()

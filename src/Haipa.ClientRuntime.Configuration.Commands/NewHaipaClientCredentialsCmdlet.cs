@@ -27,6 +27,14 @@ namespace Haipa.ClientRuntime.Configuration
         [ValidateNotNull]
         public Uri IdentityEndpoint { get; set; }
 
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty]
+        public string Configuration { get; set; }
+
+
+
         protected override void ProcessRecord()
         {
             foreach (var inputObject in InputObject)
@@ -43,7 +51,7 @@ namespace Haipa.ClientRuntime.Configuration
                         IdentityModel.Clients.Internal.PrivateKey.ReadString(inputObject.ToString()));
                 }
 
-                WriteObject(new ClientCredentials(Id, keyData, IdentityEndpoint));
+                WriteObject(new ClientCredentials(Id, keyData, IdentityEndpoint, Configuration));
 
             }
             

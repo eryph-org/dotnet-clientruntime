@@ -54,7 +54,7 @@ namespace Haipa.ClientRuntime.Configuration
             {
                 var clientData = new ClientData(Id, Name);
                 storesWriter.AddClient(clientData);
-                storesWriter.AddClientCredentials(new ClientCredentials(Id, credential.KeyPairData, credential.IdentityProvider));
+                storesWriter.AddClientCredentials(new ClientCredentials(Id, credential.KeyPairData, credential.IdentityProvider, GetConfigurationName()));
 
                 if (AsDefault.IsPresent)
                     storesWriter.SetDefaultClient(clientData);

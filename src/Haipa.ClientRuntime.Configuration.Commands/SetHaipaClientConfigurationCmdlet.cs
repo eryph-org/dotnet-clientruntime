@@ -65,7 +65,7 @@ namespace Haipa.ClientRuntime.Configuration
 
             if (Credentials != null)
             {
-                var newCredentials = new ClientCredentials(Id, Credentials.KeyPairData, Credentials.IdentityProvider);
+                var newCredentials = new ClientCredentials(Id, Credentials.KeyPairData, Credentials.IdentityProvider, GetConfigurationName());
                 storesWriter.AddClientCredentials(newCredentials);
             }
 

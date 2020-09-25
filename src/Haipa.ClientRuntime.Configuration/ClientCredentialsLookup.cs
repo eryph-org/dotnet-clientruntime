@@ -119,7 +119,7 @@ namespace Haipa.ClientRuntime.Configuration
 
             return new ClientCredentials("system-client", 
                 identityInfo.GetSystemClientPrivateKey(),
-                identityEndpoint);
+                identityEndpoint, configName);
 
         }
 
