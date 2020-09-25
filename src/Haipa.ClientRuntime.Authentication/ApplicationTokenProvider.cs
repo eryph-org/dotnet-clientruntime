@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Haipa.ClientRuntime.Configuration;
 using Haipa.IdentityModel.Clients;
 using Microsoft.Rest;
 
@@ -27,10 +28,10 @@ namespace Haipa.ClientRuntime.Authentication
         /// <param name="haipaClient">The Haipa client .</param>
         /// <param name="tokenResponse">The token details provided when authenticating with the client.</param>
         /// <param name="scopes">the requested scopes</param>
-        public ApplicationTokenProvider(ClientData haipaClient, AccessTokenResponse tokenResponse, IEnumerable<string> scopes)
+        public ApplicationTokenProvider(ClientCredentials credentials, AccessTokenResponse tokenResponse, IEnumerable<string> scopes)
         {
-            Initialize(haipaClient.IdentityProvider.ToString(), scopes, tokenResponse.AccessToken, tokenResponse.ExpiresOn.GetValueOrDefault(),
-                new HaipaClientAuthenticationProvider(haipaClient));
+            Initialize(credentials.IdentityProvider.ToString(), scopes, tokenResponse.AccessToken, tokenResponse.ExpiresOn.GetValueOrDefault(),
+                new HaipaClientAuthenticationProvider(credentials));
         }
 
         /// <summary>
@@ -70,23 +71,23 @@ namespace Haipa.ClientRuntime.Authentication
             _expiration = tokenExpiration;
         }
 
-        public static async Task<ServiceClientCredentials> LogonWithHaipaClient(ClientData clientData, IEnumerable<string> scopes)
+        public static async Task<ServiceClientCredentials> LogonWithHaipaClient(ClientCredentials credentials, IEnumerable<string> scopes)
         {
             var scopesArray = scopes as string[] ?? scopes.ToArray();
 
             AccessTokenResponse accessTokenResponse;
             using (var httpClient = new HttpClient())
             {
-                accessTokenResponse = await clientData.GetAccessToken(scopesArray,httpClient).ConfigureAwait(false);
+                accessTokenResponse = await credentials.GetAccessToken(scopesArray,httpClient).ConfigureAwait(false);
             }
 
-            return new TokenCredentials(new ApplicationTokenProvider(clientData, accessTokenResponse, scopesArray));
+            return new TokenCredentials(new ApplicationTokenProvider(credentials, accessTokenResponse, scopesArray));
         }
 
         public static Task<ServiceClientCredentials> LogonWithHaipaClient(IEnumerable<string> scopes)
         {
-            var clientLookup = new ClientLookup();
-            return LogonWithHaipaClient(clientLookup.FindClient(), scopes);
+            var clientLookup = new ClientCredentialsLookup();
+            return LogonWithHaipaClient(clientLookup.FindCredentials(), scopes);
         }
     }
 }

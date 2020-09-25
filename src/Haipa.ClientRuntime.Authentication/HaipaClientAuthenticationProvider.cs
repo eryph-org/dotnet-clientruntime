@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Haipa.IdentityModel.Clients;
 
@@ -8,17 +9,29 @@ namespace Haipa.ClientRuntime.Authentication
 {
     public class HaipaClientAuthenticationProvider : IApplicationAuthenticationProvider
     {
-        private readonly ClientData _haipaClient;
+        private readonly ClientCredentials _clientCredentials;
 
-        public HaipaClientAuthenticationProvider(ClientData haipaClient)
+        public HaipaClientAuthenticationProvider(ClientCredentials credentials)
         {
-            _haipaClient = haipaClient;
+            _clientCredentials = credentials;
         }
 
         public Task<AccessTokenResponse> AuthenticateAsync(string audience, IEnumerable<string> scopes)
         {
-            using (var httpClient = new HttpClient{BaseAddress = new Uri(audience)})
-                return httpClient.GetClientAccessToken(_haipaClient.Id, _haipaClient.KeyPair.ToRSAParameters(), scopes);
+            using (var httpClient = new HttpClient {BaseAddress = new Uri(audience)})
+            {
+                var keyPairPtr = Marshal.SecureStringToGlobalAllocUnicode(_clientCredentials.KeyPairData);
+                try
+                {
+                    var keyPair = IdentityModel.Clients.Internal.PrivateKey.ReadString(Marshal.PtrToStringUni(keyPairPtr));
+                    return httpClient.GetClientAccessToken(_clientCredentials.Id,
+                        keyPair.ToRSAParameters(), scopes);
+                }
+                finally
+                {
+                    Marshal.ZeroFreeGlobalAllocUnicode(keyPairPtr);
+                }
+            }
         }
     }
 }
