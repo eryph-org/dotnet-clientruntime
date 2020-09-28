@@ -4,6 +4,7 @@
     <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RootNamespace>Haipa.ClientRuntime.Configuration</RootNamespace>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
     <ItemGroup>
