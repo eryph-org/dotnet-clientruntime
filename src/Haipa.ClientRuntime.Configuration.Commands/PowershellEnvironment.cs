@@ -1,4 +1,6 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Linq;
+using System.Management.Automation;
 using Haipa.IdentityModel.Clients;
 
 namespace Haipa.ClientRuntime.Configuration
@@ -15,6 +17,20 @@ namespace Haipa.ClientRuntime.Configuration
         public override string GetCurrentDirectory()
         {
             return _sessionState.Path.CurrentFileSystemLocation.Path;
+        }
+
+        public override bool IsWindowsAdminUser
+        {
+            get
+            {
+                var result = _sessionState.InvokeCommand.InvokeScript(
+                    "[bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match \"S-1-5-32-544\")").ToArray();
+
+                if (result.Length == 1)
+                    return (bool)result[0].BaseObject;
+
+                return false;
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Haipa.ClientRuntime.Configu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Haipa.ClientRuntime.Configuration.Commands", "src\Haipa.ClientRuntime.Configuration.Commands\Haipa.ClientRuntime.Configuration.Commands.csproj", "{B8988007-56A6-4752-A341-AF0A333EF947}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haipa.ClientRuntime.Configuration.Tests", "test\Haipa.ClientRuntime.Configuration.Tests\Haipa.ClientRuntime.Configuration.Tests.csproj", "{178994B5-9A68-4F03-AA88-CA1AC79780D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Haipa.ClientRuntime.Configuration.Tests", "test\Haipa.ClientRuntime.Configuration.Tests\Haipa.ClientRuntime.Configuration.Tests.csproj", "{178994B5-9A68-4F03-AA88-CA1AC79780D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
