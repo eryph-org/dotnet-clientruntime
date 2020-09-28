@@ -20,8 +20,8 @@ cd Haipa.ClientRuntime.Configuration
 mkdir coreclr | Out-Null
 mkdir desktop | Out-Null
 
-cp ..\..\build\Haipa.ClientRuntime.Configuration* .
-cp ..\..\src\Haipa.ClientRuntime.Configuration.Commands\bin\${Configuration}\netcoreapp3.0\* coreclr -Exclude $excludedFiles -Recurse
-cp ..\..\src\Haipa.ClientRuntime.Configuration.Commands\bin\${Configuration}\net472\* desktop  -Exclude $excludedFiles  -Recurse
+cp $rootDir\build\Haipa.ClientRuntime.Configuration* .
+cp $rootDir\src\Haipa.ClientRuntime.Configuration.Commands\bin\${Configuration}\netcoreapp3.0\* coreclr -Exclude $excludedFiles -Recurse
+cp $rootDir\src\Haipa.ClientRuntime.Configuration.Commands\bin\${Configuration}\net472\* desktop  -Exclude $excludedFiles  -Recurse
 
 Pop-Location
