@@ -4,42 +4,94 @@ using JetBrains.Annotations;
 
 namespace Haipa.ClientRuntime.Configuration
 {
-    [Cmdlet(VerbsCommon.Remove, "HaipaClientConfiguration")]
+    [PublicAPI]
+    [Cmdlet(VerbsCommon.Remove, nameof(HaipaClientConfiguration), 
+        SupportsShouldProcess = true)]
     [UsedImplicitly]
+    [OutputType(typeof(HaipaClientConfiguration))]
     public class RemoveHaipaClientConfigurationCmdlet : ConfigurationCmdlet
     {
-        // ReSharper disable MemberCanBePrivate.Global
-        // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-        // ReSharper disable UnusedAutoPropertyAccessor.Global
-
         [Parameter(
             Position = 0, 
             Mandatory = true,
+            ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty]
-        public string Id { get; set; }
+        public string[] Id { get; set; }
 
-        // ReSharper restore MemberCanBePrivate.Global
-        // ReSharper restore AutoPropertyCanBeMadeGetOnly.Global
-        // ReSharper restore UnusedAutoPropertyAccessor.Global
+        /// <summary>
+        /// This parameter overrides the ShouldContinue call to force
+        /// the cmdlet to stop its operation. This parameter should always
+        /// be used with caution.
+        /// </summary>
+        [Parameter]
+        public SwitchParameter Force
+        {
+            get => _force;
+            set => _force = value;
+        }
 
+        /// <summary>
+        /// This parameter indicates that the cmdlet should return
+        /// an object to the pipeline after the processing has been
+        /// completed.
+        /// </summary>
+        [Parameter]
+        public SwitchParameter PassThru
+        {
+            get => _passThru;
+            set => _passThru = value;
+        }
+
+        private bool _yesToAll, _noToAll;
+        private bool _passThru;
+        private bool _force;
+
+        protected override void BeginProcessing()
+        {
+        }
 
         protected override void ProcessRecord()
         {
             var storesReader = GetStoresReader();
 
-            var currentClientData = storesReader.GetClientById(Id);
-
-            if (currentClientData == null)
+            foreach (var id in Id)
             {
-                throw new InvalidOperationException($"Client with id '{Id}' not found in configuration '{GetConfigurationName()}'.");
+                try
+                {
+                    var currentClientData = storesReader.GetClientById(id);
+
+                    if (currentClientData == null)
+                    {
+                        WriteError(new ErrorRecord(new InvalidOperationException($"Client with id '{id}' not found in configuration '{GetConfigurationName()}'."),
+                            $"{nameof(HaipaClientConfiguration)}{ErrorCategory.ObjectNotFound}",
+                            ErrorCategory.ObjectNotFound, Id));
+                        continue;
+                    }
+                    
+                    var storesWriter = GetStoresWriter();
+                    if (!ShouldProcess(id)) continue;
+
+                    if (!ShouldContinue($"The client with {id} will be deleted permanently.", "Warning!",
+                        ref _yesToAll, ref _noToAll))
+                    {
+                        continue;
+                    }
+
+                    storesWriter.RemoveClient(id);
+                    if (storesWriter.GetDefaultClientId() == id)
+                        storesWriter.SetDefaultClient(null);
+
+                    if(_passThru)
+                        WriteObject(ToOutput(currentClientData, GetConfigurationName()));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    WriteError(new ErrorRecord(ex, 
+                        $"{nameof(HaipaClientConfiguration)}{ErrorCategory.InvalidOperation}", 
+                        ErrorCategory.InvalidOperation, Id));
+                }
             }
-
-
-            var storesWriter = GetStoresWriter();
-            storesWriter.RemoveClient(Id);
-            if(storesWriter.GetDefaultClientId()==Id)
-                storesWriter.SetDefaultClient(null);
 
         }
     }
