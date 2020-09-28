@@ -19,6 +19,13 @@ namespace Haipa.ClientRuntime.Configuration
             return _sessionState.Path.CurrentFileSystemLocation.Path;
         }
 
+        public override bool IsProcessRunning(string processName, int processId)
+        {
+           return _sessionState.InvokeCommand.InvokeScript(
+                $"Get-Process {processName} -ErrorAction SilentlyContinue | where Id -eq {processId} | Select -First 1").Any();
+
+        }
+
         public override bool IsWindowsAdminUser
         {
             get
