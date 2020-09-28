@@ -2,9 +2,12 @@
 using System.Management.Automation;
 using System.Security;
 using Haipa.IdentityModel.Clients;
+using JetBrains.Annotations;
+using Org.BouncyCastle.Crypto;
 
 namespace Haipa.ClientRuntime.Configuration
 {
+    [PublicAPI]
     [Cmdlet(VerbsCommon.New, "HaipaClientCredentials")]
     [OutputType(typeof(ClientCredentials))]
     public class NewHaipaClientCredentialsCmdlet : PSCmdlet
@@ -23,7 +26,6 @@ namespace Haipa.ClientRuntime.Configuration
         [Parameter(
             Mandatory = true,
             ValueFromPipelineByPropertyName = true)]
-
         [ValidateNotNull]
         public Uri IdentityEndpoint { get; set; }
 
@@ -47,8 +49,22 @@ namespace Haipa.ClientRuntime.Configuration
                 }
                 else
                 {
-                    keyData = IdentityModel.Clients.Internal.PrivateKey.ToSecureString(
-                        IdentityModel.Clients.Internal.PrivateKey.ReadString(inputObject.ToString()));
+                    AsymmetricCipherKeyPair keyPair = null;
+                    try
+                    {
+                        keyPair = IdentityModel.Clients.Internal.PrivateKey.ReadString(inputObject.ToString());
+                    }catch{ 
+                        // ignore
+                    }
+
+                    if (keyPair == null)
+                    {
+                        WriteError(new ErrorRecord(
+                            new InvalidOperationException("Invalid InputObject. InputObject has be a SecureString with private key or a PCKS8 private key string."),
+                            $"HaipaClientCredentials{ErrorCategory.InvalidArgument}", ErrorCategory.InvalidArgument, inputObject));
+                        continue;
+                    }
+                    keyData = IdentityModel.Clients.Internal.PrivateKey.ToSecureString(keyPair);
                 }
 
                 WriteObject(new ClientCredentials(Id, keyData, IdentityEndpoint, Configuration));

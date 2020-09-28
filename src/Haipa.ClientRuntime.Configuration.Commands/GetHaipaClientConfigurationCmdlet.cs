@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using Haipa.IdentityModel.Clients;
+using JetBrains.Annotations;
 
 namespace Haipa.ClientRuntime.Configuration
 {
+    [PublicAPI]
     [Cmdlet(VerbsCommon.Get,"HaipaClientConfiguration", DefaultParameterSetName = "id")]
     [OutputType(typeof(ClientData))]
     public class GetHaipaClientConfigurationCmdlet : ConfigurationCmdlet
@@ -42,17 +45,7 @@ namespace Haipa.ClientRuntime.Configuration
                 var storesReader = new ConfigStoresReader(new PowershellEnvironment(SessionState), configurationName);
                 var defaultClient = storesReader.GetDefaultClient();
 
-                HaipaClientConfiguration ToOutput(ClientData clientData)
-                {
-                    return new HaipaClientConfiguration
-                    {
-                        Id = clientData.Id,
-                        Name = clientData.Name,
-                        Configuration = configurationName,
-                        IsDefault = clientData.Id == defaultClient?.Id
-                    };
-                }
-
+                HaipaClientConfiguration Output(ClientData d) => ToOutput(d, configurationName);
 
                 if (Default == true)
                 {
@@ -63,12 +56,12 @@ namespace Haipa.ClientRuntime.Configuration
 
                 if (Id == null)
                 {
-                    WriteObject(storesReader.GetClients().Select(ToOutput), true);
+                    WriteObject(storesReader.GetClients().Select(Output), true);
                 }
                 else
                 {
                     WriteObject(Id.Select(x => storesReader.GetClientById(x)).Where(x => x != null)
-                        .Select(ToOutput), true);
+                        .Select(Output), true);
                 }
             }
         }

@@ -5,15 +5,13 @@ using JetBrains.Annotations;
 
 namespace Haipa.ClientRuntime.Configuration
 {
-    [Cmdlet(VerbsCommon.Add, "HaipaClientConfiguration")]
-    [OutputType(typeof(ClientData))]
+    [PublicAPI]
+    [Cmdlet(VerbsCommon.Add, nameof(HaipaClientConfiguration), 
+        SupportsShouldProcess = true)]
+    [OutputType(typeof(HaipaClientConfiguration))]
     [UsedImplicitly]
     public class AddHaipaClientConfigurationCmdlet : ConfigurationCmdlet
     {
-        // ReSharper disable MemberCanBePrivate.Global
-        // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-        // ReSharper disable UnusedAutoPropertyAccessor.Global
-
         [Parameter(
             Position = 0, 
             Mandatory = true,
@@ -27,38 +25,50 @@ namespace Haipa.ClientRuntime.Configuration
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
         
-
-        [Parameter(Mandatory = true, ValueFromPipeline = true)]
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipeline = true)]
         [ValidateNotNull]
         public ClientCredentials[] Credentials { get; set; }
 
-        [Parameter]
+        [Parameter] 
         public SwitchParameter AsDefault { get; set; }
-
-        // ReSharper restore MemberCanBePrivate.Global
-        // ReSharper restore AutoPropertyCanBeMadeGetOnly.Global
-        // ReSharper restore UnusedAutoPropertyAccessor.Global
-
 
         protected override void ProcessRecord()
         {
             var storesReader = GetStoresReader();
-            if (storesReader.GetClientById(Id) != null) 
+            foreach (var credentials in Credentials)
             {
-                throw new InvalidOperationException($"Client with id '{Id}' already exists in configuration '{GetConfigurationName()}'.");
-            }
+                try
+                {
+                    if (storesReader.GetClientById(Id) != null)
+                    {
+                        WriteError(new ErrorRecord(
+                            new InvalidOperationException(
+                                $"Client with id '{Id}' already exists in configuration '{GetConfigurationName()}'."),
+                            $"{nameof(HaipaClientConfiguration)}{ErrorCategory.ResourceExists}",
+                            ErrorCategory.ResourceExists, Id));
+                        continue;
+                    }
 
-            var storesWriter = GetStoresWriter();
+                    var storesWriter = GetStoresWriter();
 
-            foreach (var credential in Credentials)
-            {
-                var clientData = new ClientData(Id, Name);
-                storesWriter.AddClient(clientData);
-                storesWriter.AddClientCredentials(new ClientCredentials(Id, credential.KeyPairData, credential.IdentityProvider, GetConfigurationName()));
+                    var clientData = new ClientData(Id, Name);
+                    storesWriter.AddClient(clientData);
+                    storesWriter.AddClientCredentials(new ClientCredentials(Id, credentials.KeyPairData,
+                        credentials.IdentityProvider, GetConfigurationName()));
 
-                if (AsDefault.IsPresent)
-                    storesWriter.SetDefaultClient(clientData);
+                    if (AsDefault.IsPresent)
+                        storesWriter.SetDefaultClient(clientData);
 
+                    WriteObject(ToOutput(clientData, GetConfigurationName()));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    WriteError(new ErrorRecord(ex,
+                        $"{nameof(HaipaClientConfiguration)}{ErrorCategory.InvalidOperation}",
+                        ErrorCategory.InvalidOperation, Id));
+                }
             }
         }
     }

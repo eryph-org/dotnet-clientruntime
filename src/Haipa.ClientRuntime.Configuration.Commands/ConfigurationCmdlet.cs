@@ -1,4 +1,5 @@
 ﻿using System.Management.Automation;
+using Haipa.IdentityModel.Clients;
 
 namespace Haipa.ClientRuntime.Configuration
 {
@@ -47,5 +48,17 @@ namespace Haipa.ClientRuntime.Configuration
             return new ConfigStoresWriter(writerSettings);
         }
 
+        protected HaipaClientConfiguration ToOutput(ClientData clientData, string configurationName)
+        {
+            var reader = new ConfigStoresReader(new PowershellEnvironment(SessionState), GetConfigurationName());
+
+            return new HaipaClientConfiguration
+            {
+                Id = clientData.Id,
+                Name = clientData.Name,
+                Configuration = configurationName,
+                IsDefault = clientData.Id == reader.GetDefaultClient()?.Id
+            };
+        }
     }
 }
