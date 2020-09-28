@@ -50,7 +50,7 @@ namespace Haipa.ClientRuntime.Configuration
 
         protected HaipaClientConfiguration ToOutput(ClientData clientData, string configurationName)
         {
-            var reader = new ConfigStoresReader(new PowershellEnvironment(SessionState), GetConfigurationName());
+            var reader = new ConfigStoresReader(new PowershellEnvironment(SessionState), configurationName);
 
             return new HaipaClientConfiguration
             {
