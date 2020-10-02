@@ -37,13 +37,13 @@ cp $rootDir\build\${cmdletName}* .
 cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\netcoreapp3.0\* coreclr -Exclude $excludedFiles -Recurse
 cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\net472\* desktop  -Exclude $excludedFiles  -Recurse
 
-$config = gc ${cmdletName}.psd1 -Raw
+$config = gc "${cmdletName}.psd1" -Raw
 $config = $config.Replace("ModuleVersion = '0.1'", "ModuleVersion = '${Env:GITVERSION_MajorMinorPatch}'");
 
 if(-not [string]::IsNullOrWhiteSpace($Env:GITVERSION_NuGetPreReleaseTag)) {
     $config = $config.Replace("# Prerelease = ''", "Prerelease = '-${Env:GITVERSION_NuGetPreReleaseTag}'");
 }
 
-$config | sc ${cmdletName}.psd1
+$config | sc "${cmdletName}.psd1"
 
 Pop-Location

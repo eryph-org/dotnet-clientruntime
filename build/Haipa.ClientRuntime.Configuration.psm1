@@ -3,6 +3,7 @@ Set-StrictMode -Version Latest
 # Set up some helper variables to make it easier to work with the module
 $PSModule = $ExecutionContext.SessionState.Module
 $PSModuleRoot = $PSModule.ModuleBase
+$PSModuleName = $PSModule.Name
 
 # Import the appropriate nested binary module based on the current PowerShell version
 $binaryModuleRoot = $PSModuleRoot
@@ -15,18 +16,20 @@ else {
     $binaryModuleRoot = Join-Path -Path $PSModuleRoot -ChildPath 'desktop'
 }
 
-$binaryModulePath = Join-Path -Path $binaryModuleRoot -ChildPath 'Haipa.ClientRuntime.Configuration.Commands.dll'
+$binaryModulePath = Join-Path -Path $binaryModuleRoot -ChildPath "${PSModuleName}.Commands.dll"
 $binaryModule = Import-Module -Name $binaryModulePath -PassThru
 
 # When the module is unloaded, remove the nested binary module that was loaded with it
 $PSModule.OnRemove = {
     Remove-Module -ModuleInfo $binaryModule
 }
+
+
 # SIG # Begin signature block
 # MIIYzQYJKoZIhvcNAQcCoIIYvjCCGLoCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDwg90LdLorgPqY
-# W5zAujivy6vfSomQsaoqwNcgRmpb5KCCE9EwggPuMIIDV6ADAgECAhB+k+v7fMZO
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDFixv+An13i8Z4
+# +c/QaU9qgt0JJc+6zLJtCMkOd9hxBqCCE9EwggPuMIIDV6ADAgECAhB+k+v7fMZO
 # WepLmnfUBvw7MA0GCSqGSIb3DQEBBQUAMIGLMQswCQYDVQQGEwJaQTEVMBMGA1UE
 # CBMMV2VzdGVybiBDYXBlMRQwEgYDVQQHEwtEdXJiYW52aWxsZTEPMA0GA1UEChMG
 # VGhhd3RlMR0wGwYDVQQLExRUaGF3dGUgQ2VydGlmaWNhdGlvbjEfMB0GA1UEAxMW
@@ -137,23 +140,23 @@ $PSModule.OnRemove = {
 # Ew9TZWN0aWdvIExpbWl0ZWQxJDAiBgNVBAMTG1NlY3RpZ28gUlNBIENvZGUgU2ln
 # bmluZyBDQQIQAeTTyPPPB1WTeW15D0AFyDANBglghkgBZQMEAgEFAKCBhDAYBgor
 # BgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEE
-# MBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMC8GCSqGSIb3DQEJBDEiBCBb
-# F9eP2sHotI48fb/OFVr4xA7dgRxRArrnoK06MC4d9zANBgkqhkiG9w0BAQEFAASC
-# AQCI4VC2sg05jaPtzeZjG1OE7pa5CLbHMpUFKDCl3LY1MdoXPjQPb352kVqrHPvw
-# F/zRVUm6g0mthj4lWljZwqS0+ga4elP+9/jsAIlIYLXUV18GLm+q1lxlRkHqqXLQ
-# 7wjS8bb4fkKFu318Yl2+olce7xOmW1ihcscdr5h1BnCm8d9/NPA3xr5LzTDY717m
-# yXLbuTzzjlwGYGMuF1rXdkY7GikKxx7rZs1YS9ap5v65NS4aQYD9bgJ8fbPMNBIR
-# vJmM6/1U6tZ6JvJUkfNkpO6d1LgfTJkQ1+LRoRmE8l/GdgWFssun4N9/VBUnge0i
-# bSRFJEv22Tx/eSLosip/xi0uoYICCzCCAgcGCSqGSIb3DQEJBjGCAfgwggH0AgEB
+# MBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMC8GCSqGSIb3DQEJBDEiBCAv
+# /xY197r8guy5T10fehqOAJxnRb6uxvqgqgUALFgX7TANBgkqhkiG9w0BAQEFAASC
+# AQAcbQ/u9Gz9vHQBbTGmoFXAYSwD5zs0P4/Iid5bUyytUHDEGejcyEmKLZOwbRGR
+# uhTSevJ/QU6YJN+7jD/T1ndMbL6eaYQfoNwklhH+MYyEWcXusJPi+EbVT1tCIyxM
+# KoH9zkoPpkXAm+beUR0o1crAVzatzAxzxrpln2kYlEHk0OtWRWMYAWZ1fQQ46omI
+# WCuxiY720RAPiZQAySXD9oFJKNZCuyl5V+BBrj3AvKLlVwqwdVQylwpGJHBCqqFd
+# hN4qsD0MA5tI0dp1G2uq/rPPcU73WLB1DfUgVehanlH/DGw6sFZm3IvPESmagcha
+# L9huvHV/oXmY1lhpw3OZpPKUoYICCzCCAgcGCSqGSIb3DQEJBjGCAfgwggH0AgEB
 # MHIwXjELMAkGA1UEBhMCVVMxHTAbBgNVBAoTFFN5bWFudGVjIENvcnBvcmF0aW9u
 # MTAwLgYDVQQDEydTeW1hbnRlYyBUaW1lIFN0YW1waW5nIFNlcnZpY2VzIENBIC0g
 # RzICEA7P9DjI/r81bgTYapgbGlAwCQYFKw4DAhoFAKBdMBgGCSqGSIb3DQEJAzEL
-# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIwMDkyODE2MjkxM1owIwYJKoZI
-# hvcNAQkEMRYEFDRA9RRM9irLa4B6UQDk9hrSKwP6MA0GCSqGSIb3DQEBAQUABIIB
-# AG8uGPOSYI7fJ4jCtx+xSLt507fiGz6Nl2HqiV0TKQTxOQYc2qQQdwFWRKA3hw0i
-# Hr/OZq9WqtPUOb2SlDFOrxxrWzZRX/OphzlmurvE38xuCAiRC7/tB0HMuZodClZu
-# eFdo+T6XgzQGRwl7Psy03W0uz5t7nyaK31QTv5wT8+c8DdY+u/nTDqOtHPmBt5lP
-# uOuXIwJbj6dTeFm5AOZuucKtXK8mRVyluPQdrULQtsqOm/LdXX04ImT+MA90HarI
-# Du+HLmHOD1qXxDgFMRmT33kb48Qlx4sa7Dhe3r34WjTtsNfSI1JznCK6p5gZMPv5
-# si7stCUvhsFlJml7Zw9/kR0=
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIwMTAwMjE2NTYyMVowIwYJKoZI
+# hvcNAQkEMRYEFCZ8+sJKB2XzaF05WqtjVAQygSnpMA0GCSqGSIb3DQEBAQUABIIB
+# AE0tX77yNZAl4mouzx6PpnDSFvoHnDBi0+yojjN2cdPtZJsbe16VDF0MQcvR1/Cm
+# BVSxD4lm3x7gPGDUklbAuvMr+Ytv4sIY9CWVtGKiOPbID1wVdhl8d4eem9O8t2DP
+# ztFQPj2+yoXlfnuZiDafmQhRhw6R5iRNu+IiKcdD08xqledwP5tOBWoc5PtJZNs2
+# QwY5dC3UH8iSkGChGNmOYPo985TesOgsWgvjYLKjCQ/hMDQVANcmCqkhX9atA3UP
+# 7zH80O+DAbhxVmctgOtvcWSI+ESLiUdHrDrWGTvMjJST0rX7sIjUBmpETBEeRCAM
+# jqfGcvtKypnt6gRgcsJmADo=
 # SIG # End signature block
