@@ -58,7 +58,9 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: publish artifacts
   inputs:
-    ArtifactName: cmdlet
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\cmdlet'
+    ArtifactName: 'cmdlet'
+    publishLocation: 'Container'
 
 - task: PublishBuildArtifacts@1
   displayName: publish artifacts
