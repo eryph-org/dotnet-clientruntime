@@ -95,7 +95,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @("Haipa")
+        Tags = @("Haipa", "Windows", "Linux", "MacOS")
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/haipa/dotnet-clientruntime/blob/master/LICENSE'
