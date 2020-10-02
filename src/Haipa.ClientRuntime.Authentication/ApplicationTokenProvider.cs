@@ -24,8 +24,7 @@ namespace Haipa.ClientRuntime.Authentication
         /// Create an application token provider that can retrieve tokens for the given application using the given audience, scopes
         /// and a Haipa client.
         /// </summary>
-        /// <param name="identityEndpoint">The identity endpoint to use when retrieving tokens.</param>
-        /// <param name="haipaClient">The Haipa client .</param>
+        /// <param name="credentials">The Haipa client credentials.</param>
         /// <param name="tokenResponse">The token details provided when authenticating with the client.</param>
         /// <param name="scopes">the requested scopes</param>
         public ApplicationTokenProvider(ClientCredentials credentials, AccessTokenResponse tokenResponse, IEnumerable<string> scopes)
@@ -75,11 +74,8 @@ namespace Haipa.ClientRuntime.Authentication
         {
             var scopesArray = scopes as string[] ?? scopes.ToArray();
 
-            AccessTokenResponse accessTokenResponse;
-            using (var httpClient = new HttpClient())
-            {
-                accessTokenResponse = await credentials.GetAccessToken(scopesArray,httpClient).ConfigureAwait(false);
-            }
+            var accessTokenResponse =
+                await credentials.GetAccessToken(scopesArray).ConfigureAwait(false);
 
             return new TokenCredentials(new ApplicationTokenProvider(credentials, accessTokenResponse, scopesArray));
         }
