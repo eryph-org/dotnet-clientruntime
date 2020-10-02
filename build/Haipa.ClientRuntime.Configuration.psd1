@@ -21,16 +21,16 @@ CompatiblePSEditions = 'Desktop', 'Core'
 GUID = '31a5834e-973e-478f-a48d-cea5f1e92962'
 
 # Author of this module
-Author = 'dbosoft and Haipa contributors'
+Author = 'dbosoft GmbH and Haipa contributors'
 
 # Company or vendor of this module
 CompanyName = 'dbosoft'
 
 # Copyright statement for this module
-Copyright = '(c) dbosoft and Haipa contributors. All rights reserved.'
+Copyright = '(c) dbosoft GmbH and Haipa contributors. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'Configuration Cmdlets for Haipa. These Cmdlets allows you to manage your clients, credentials and endpoints for Haipa.'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
@@ -42,10 +42,10 @@ PowerShellVersion = '5.1'
 # PowerShellHostVersion = ''
 
 # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-# DotNetFrameworkVersion = ''
+# DotNetFrameworkVersion = '4.7.2'
 
 # Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-# ClrVersion = ''
+# ClrVersion = '4.0'
 
 # Processor architecture (None, X86, Amd64) required by this module
 # ProcessorArchitecture = ''
@@ -95,13 +95,13 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @("Haipa")
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/haipa/dotnet-clientruntime/blob/master/LICENSE'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/haipa/dotnet-clientruntime'
 
         # A URL to an icon representing this module.
         # IconUri = ''
@@ -126,7 +126,7 @@ PrivateData = @{
 # HelpInfoURI = ''
 
 # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
-DefaultCommandPrefix = ''
+# DefaultCommandPrefix = ''
 
 }
 
