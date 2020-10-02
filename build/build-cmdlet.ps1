@@ -1,5 +1,6 @@
 param ($Configuration = "Debug", $OutputDir = ".")
 
+$cmdletName = "Haipa.ClientRuntime.Configuration"
 $excludedFiles = @("System.Management.Automation.dll", "JetBrains.Annotations.dll")
 
 # If this script is not running on a build server, remind user to 
@@ -26,23 +27,23 @@ if(Test-Path cmdlet ) {
 
 mkdir cmdlet | Out-Null
 cd cmdlet
-mkdir Haipa.ClientRuntime.Configuration | Out-Null
-cd Haipa.ClientRuntime.Configuration
+mkdir ${cmdletName} | Out-Null
+cd ${cmdletName}
 
 mkdir coreclr | Out-Null
 mkdir desktop | Out-Null
 
-cp $rootDir\build\Haipa.ClientRuntime.Configuration* .
-cp $rootDir\src\Haipa.ClientRuntime.Configuration.Commands\bin\${Configuration}\netcoreapp3.0\* coreclr -Exclude $excludedFiles -Recurse
-cp $rootDir\src\Haipa.ClientRuntime.Configuration.Commands\bin\${Configuration}\net472\* desktop  -Exclude $excludedFiles  -Recurse
+cp $rootDir\build\${cmdletName}* .
+cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\netcoreapp3.0\* coreclr -Exclude $excludedFiles -Recurse
+cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\net472\* desktop  -Exclude $excludedFiles  -Recurse
 
-$config = gc Haipa.ClientRuntime.Configuration.psd1 -Raw
+$config = gc ${cmdletName}.psd1 -Raw
 $config = $config.Replace("ModuleVersion = '0.1'", "ModuleVersion = '${Env:GITVERSION_MajorMinorPatch}'");
 
 if(-not [string]::IsNullOrWhiteSpace($Env:GITVERSION_NuGetPreReleaseTag)) {
     $config = $config.Replace("# Prerelease = ''", "Prerelease = '-${Env:GITVERSION_NuGetPreReleaseTag}'");
 }
 
-$config | sc Haipa.ClientRuntime.Configuration.psd1
+$config | sc ${cmdletName}.psd1
 
 Pop-Location
