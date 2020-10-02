@@ -39,8 +39,8 @@ cp $rootDir\src\Haipa.ClientRuntime.Configuration.Commands\bin\${Configuration}\
 $config = gc Haipa.ClientRuntime.Configuration.psd1 -Raw
 $config = $config.Replace("ModuleVersion = '0.1'", "ModuleVersion = '${Env:GITVERSION_MajorMinorPatch}'");
 
-if(-not [string]::IsNullOrWhiteSpace($Env:GITVERSION_PreReleaseTag)) {
-    $config = $config.Replace("# Prerelease = ''", "Prerelease = '-${Env:GITVERSION_PreReleaseTag}'");
+if(-not [string]::IsNullOrWhiteSpace($Env:GITVERSION_NuGetPreReleaseTag)) {
+    $config = $config.Replace("# Prerelease = ''", "Prerelease = '-${Env:GITVERSION_NuGetPreReleaseTag}'");
 }
 
 $config | sc Haipa.ClientRuntime.Configuration.psd1
