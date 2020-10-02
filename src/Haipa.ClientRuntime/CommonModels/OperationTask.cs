@@ -2,7 +2,7 @@
 // MIT
 // </auto-generated>
 
-namespace Haipa.ComputeClient.Models
+namespace Haipa.ClientRuntime
 {
     using Newtonsoft.Json;
     using System.Linq;
