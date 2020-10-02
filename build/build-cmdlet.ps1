@@ -9,7 +9,7 @@ if(-not ($Env:GITVERSION_MajorMinorPatch))
     Write-Error "You must set the following environment variables"
     Write-Error "to test this script interactively (values are examples)"
     Write-Host '$Env:GITVERSION_MajorMinorPatch = "1.0.0"'
-    Write-Host '$Env:GITVERSION_PreReleaseTag = "2"'
+    Write-Host '$Env:NuGetPreReleaseTag = "ci0030"'
     exit 1
 }
 
@@ -40,7 +40,7 @@ $config = gc Haipa.ClientRuntime.Configuration.psd1 -Raw
 $config = $config.Replace("ModuleVersion = '0.1'", "ModuleVersion = '${Env:GITVERSION_MajorMinorPatch}'");
 
 if(-not [string]::IsNullOrWhiteSpace($Env:GITVERSION_PreReleaseTag)) {
-    $config = $config.Replace("# Prerelease = ''", "Prerelease = '${Env:GITVERSION_PreReleaseTag}'");
+    $config = $config.Replace("# Prerelease = ''", "Prerelease = '-${Env:NuGetPreReleaseTag}'");
 }
 
 $config | sc Haipa.ClientRuntime.Configuration.psd1
