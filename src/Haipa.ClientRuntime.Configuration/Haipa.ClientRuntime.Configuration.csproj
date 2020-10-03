@@ -17,7 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Haipa.IdentityModel.Clients" Version="0.1.1-ci.4" />
+    <PackageReference Include="Haipa.IdentityModel.Clients" Version="0.2.0" />
   </ItemGroup>
 
 </Project>
