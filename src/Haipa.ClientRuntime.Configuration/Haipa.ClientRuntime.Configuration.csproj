@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Haipa/dotnet-clientruntime</PackageProjectUrl>
+    <Copyright>dbosoft GmbH and Haipa contributors</Copyright>
+    <Authors>dbosoft and Haipa contributors</Authors>
+    <Company>dbosoft GmbH</Company>
+    <Product>Haipa</Product>
+    <RepositoryUrl>https://github.com/Haipa/dotnet-clientruntime</RepositoryUrl>
+    <Description>Configuration library for Haipa clients. Management of clients, credentials and endpoints for Haipa.</Description>
   </PropertyGroup>
 
   <ItemGroup>
