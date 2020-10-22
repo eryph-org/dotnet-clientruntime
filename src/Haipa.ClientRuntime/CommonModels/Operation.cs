@@ -24,14 +24,13 @@ namespace Haipa.ClientRuntime
         /// </summary>
         /// <param name="status">Possible values include: 'Queued', 'Running',
         /// 'Failed', 'Completed'</param>
-        public Operation(System.Guid? id = default(System.Guid?), IList<OperationLogEntry> logEntries = default(IList<OperationLogEntry>), IList<OperationResource> resources = default(IList<OperationResource>), string status = default(string), string statusMessage = default(string), IList<OperationTask> tasks = default(IList<OperationTask>))
+        public Operation(System.Guid? id = default(System.Guid?), string status = default(string), string statusMessage = default(string), IList<OperationResource> resources = default(IList<OperationResource>), IList<OperationLogEntry> logEntries = default(IList<OperationLogEntry>))
         {
             Id = id;
-            LogEntries = logEntries;
-            Resources = resources;
             Status = status;
             StatusMessage = statusMessage;
-            Tasks = tasks;
+            Resources = resources;
+            LogEntries = logEntries;
             CustomInit();
         }
 
@@ -44,16 +43,6 @@ namespace Haipa.ClientRuntime
         /// </summary>
         [JsonProperty(PropertyName = "id")]
         public System.Guid? Id { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "logEntries")]
-        public IList<OperationLogEntry> LogEntries { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "resources")]
-        public IList<OperationResource> Resources { get; set; }
 
         /// <summary>
         /// Gets or sets possible values include: 'Queued', 'Running',
@@ -69,8 +58,13 @@ namespace Haipa.ClientRuntime
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "tasks")]
-        public IList<OperationTask> Tasks { get; set; }
+        [JsonProperty(PropertyName = "resources")]
+        public IList<OperationResource> Resources { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "logEntries")]
+        public IList<OperationLogEntry> LogEntries { get; set; }
 
     }
 }

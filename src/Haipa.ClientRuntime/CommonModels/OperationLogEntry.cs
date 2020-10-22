@@ -20,13 +20,11 @@ namespace Haipa.ClientRuntime
         /// <summary>
         /// Initializes a new instance of the OperationLogEntry class.
         /// </summary>
-        public OperationLogEntry(System.Guid? id = default(System.Guid?), string message = default(string), OperationTask task = default(OperationTask), System.DateTime? timestamp = default(System.DateTime?), Operation operation = default(Operation))
+        public OperationLogEntry(System.Guid? id = default(System.Guid?), string message = default(string), System.DateTime? timestamp = default(System.DateTime?))
         {
             Id = id;
             Message = message;
-            Task = task;
             Timestamp = timestamp;
-            Operation = operation;
             CustomInit();
         }
 
@@ -47,18 +45,8 @@ namespace Haipa.ClientRuntime
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "task")]
-        public OperationTask Task { get; set; }
-
-        /// <summary>
-        /// </summary>
         [JsonProperty(PropertyName = "timestamp")]
         public System.DateTime? Timestamp { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "operation")]
-        public Operation Operation { get; set; }
 
     }
 }
