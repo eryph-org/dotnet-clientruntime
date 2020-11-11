@@ -22,7 +22,7 @@ namespace Haipa.ClientRuntime
         /// </summary>
         /// <param name="resourceType">Possible values include:
         /// 'Machine'</param>
-        public OperationResource(System.Guid? id = default(System.Guid?), System.Guid? resourceId = default(System.Guid?), string resourceType = default(string))
+        public OperationResource(System.Guid? id = default(System.Guid?), string resourceId = default(string), string resourceType = default(string))
         {
             Id = id;
             ResourceId = resourceId;
@@ -43,7 +43,7 @@ namespace Haipa.ClientRuntime
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "resourceId")]
-        public System.Guid? ResourceId { get; set; }
+        public string ResourceId { get; set; }
 
         /// <summary>
         /// Gets or sets possible values include: 'Machine'
