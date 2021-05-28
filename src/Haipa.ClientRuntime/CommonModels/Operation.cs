@@ -24,7 +24,7 @@ namespace Haipa.ClientRuntime
         /// </summary>
         /// <param name="status">Possible values include: 'Queued', 'Running',
         /// 'Failed', 'Completed'</param>
-        public Operation(System.Guid? id = default(System.Guid?), string status = default(string), string statusMessage = default(string), IList<OperationResource> resources = default(IList<OperationResource>), IList<OperationLogEntry> logEntries = default(IList<OperationLogEntry>))
+        public Operation(string id = default(string), string status = default(string), string statusMessage = default(string), IList<OperationResource> resources = default(IList<OperationResource>), IList<OperationLogEntry> logEntries = default(IList<OperationLogEntry>))
         {
             Id = id;
             Status = status;
@@ -42,7 +42,7 @@ namespace Haipa.ClientRuntime
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public System.Guid? Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets possible values include: 'Queued', 'Running',

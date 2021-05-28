@@ -20,7 +20,7 @@ namespace Haipa.ClientRuntime
         /// <summary>
         /// Initializes a new instance of the OperationLogEntry class.
         /// </summary>
-        public OperationLogEntry(System.Guid? id = default(System.Guid?), string message = default(string), System.DateTime? timestamp = default(System.DateTime?))
+        public OperationLogEntry(string id = default(string), string message = default(string), System.DateTime? timestamp = default(System.DateTime?))
         {
             Id = id;
             Message = message;
@@ -36,7 +36,7 @@ namespace Haipa.ClientRuntime
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public System.Guid? Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// </summary>
