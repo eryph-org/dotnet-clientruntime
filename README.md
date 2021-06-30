@@ -2,14 +2,14 @@
 Eryph .NET library for API clients and client configuration management 
 
 
-[![Build Status](https://dev.azure.com/dbosoft/public/_apis/build/status/haipa.dotnet-clientruntime?branchName=refs%2Fpull%2F2%2Fmerge)](https://dev.azure.com/dbosoft/public/_build/latest?definitionId=34&branchName=refs%2Fpull%2F2%2Fmerge)
+[![Build Status](https://dev.azure.com/dbosoft/public/_apis/build/status/eryph-org.dotnet-clientruntime?branchName=refs%2Fpull%2F2%2Fmerge)](https://dev.azure.com/dbosoft/public/_build/latest?definitionId=34&branchName=refs%2Fpull%2F2%2Fmerge)
 
 ## Description
 
 - **Eryph.ClientRuntime**: core package for all Autorest generated C# Eryph clients
 - **Eryph.ClientRuntime.Authentication**: Authentication with Eryph clients on generated API clients.
 - **Eryph.ClientRuntime.Configuration**: read and manage local configuration for Eryph clients
-- **Eryph.ClientRuntime.Configuration.Commands**: Powershell commands to manage local haipa configuration
+- **Eryph.ClientRuntime.Configuration.Commands**: Powershell commands to manage local eryph configuration
 
 ## Platforms & Prerequisites
 
@@ -29,13 +29,13 @@ https://dev.azure.com/dbosoft/public/_packaging?_a=feed&feed=Public
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/haipa/dotnet-clientruntime/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/eryph-org/dotnet-clientruntime/tags). 
 
 ## Authors
 
 * **Frank Wagner** - *Initial work* - [fw2568](https://github.com/fw2568)
 
-See also the list of [contributors](https://github.com/haipa/dotnet-clientruntime/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/eryph-org/dotnet-clientruntime/contributors) who participated in this project.
 
 
 ## License
