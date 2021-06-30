@@ -61,7 +61,7 @@ namespace Eryph.ClientRuntime.Configuration
                     {
                         WriteError(new ErrorRecord(
                             new InvalidOperationException("Invalid InputObject. InputObject has be a SecureString with private key or a PCKS8 private key string."),
-                            $"HaipaClientCredentials{ErrorCategory.InvalidArgument}", ErrorCategory.InvalidArgument, inputObject));
+                            $"EryphClientCredentials{ErrorCategory.InvalidArgument}", ErrorCategory.InvalidArgument, inputObject));
                         continue;
                     }
                     keyData = IdentityModel.Clients.Internal.PrivateKey.ToSecureString(keyPair);

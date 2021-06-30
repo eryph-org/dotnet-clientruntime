@@ -36,7 +36,7 @@ namespace Eryph.ClientRuntime.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Haipa.ClientRuntime.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Eryph.ClientRuntime.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -86,7 +86,7 @@ namespace Eryph.ClientRuntime.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Authentication with Haipa Identity failed using clientId: {0}.
+        ///   Looks up a localized string similar to Authentication with eryph identity failed using clientId: {0}.
         /// </summary>
         internal static string AuthenticationValidationFailed {
             get {

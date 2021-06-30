@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace Eryph.ClientRuntime.Configuration
 {
-    [Cmdlet(VerbsCommon.Set, "HaipaConfigurationStore", DefaultParameterSetName = "All")]
+    [Cmdlet(VerbsCommon.Set, "EryphConfigurationStore", DefaultParameterSetName = "All")]
     [UsedImplicitly]
     public class SetEryphConfigurationStoreCmdlet : ConfigurationCmdlet
     {
@@ -63,7 +63,7 @@ namespace Eryph.ClientRuntime.Configuration
             if (Configuration != null)
                 settings.DefaultConfigurationName = Configuration;
 
-            SessionState.PSVariable.Set("HaipaStoreLocationSettings", settings);
+            SessionState.PSVariable.Set("EryphStoreLocationSettings", settings);
 
         }
 
