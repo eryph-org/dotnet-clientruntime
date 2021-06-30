@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 namespace Eryph.ClientRuntime.Configuration
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.Get,"HaipaClientConfiguration", DefaultParameterSetName = "id")]
+    [Cmdlet(VerbsCommon.Get,"EryphClientConfiguration", DefaultParameterSetName = "id")]
     [OutputType(typeof(ClientData))]
     public class GetEryphClientConfigurationCmdlet : ConfigurationCmdlet
     {
