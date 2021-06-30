@@ -2,7 +2,7 @@
 Eryph .NET library for API clients and client configuration management 
 
 
-[![Build Status](https://dev.azure.com/dbosoft/public/_apis/build/status/eryph-org.dotnet-clientruntime?branchName=refs%2Fpull%2F2%2Fmerge)](https://dev.azure.com/dbosoft/public/_build/latest?definitionId=34&branchName=refs%2Fpull%2F2%2Fmerge)
+[![Build Status](https://dev.azure.com/dbosoft/public/_apis/build/status/eryph-org.dotnet-clientruntime?repoName=eryph-org%2Fdotnet-clientruntime&branchName=main)](https://dev.azure.com/dbosoft/public/_build/latest?definitionId=41&repoName=eryph-org%2Fdotnet-clientruntime&branchName=main)
 
 ## Description
 
