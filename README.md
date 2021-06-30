@@ -1,15 +1,15 @@
-# Haipa Client Runtime for .NET
-Haipa .NET library for API clients and client configuration management 
+# Eryph Client Runtime for .NET
+Eryph .NET library for API clients and client configuration management 
 
 
 [![Build Status](https://dev.azure.com/dbosoft/public/_apis/build/status/haipa.dotnet-clientruntime?branchName=refs%2Fpull%2F2%2Fmerge)](https://dev.azure.com/dbosoft/public/_build/latest?definitionId=34&branchName=refs%2Fpull%2F2%2Fmerge)
 
 ## Description
 
-- **Haipa.ClientRuntime**: core package for all Autorest generated C# Haipa clients
-- **Haipa.ClientRuntime.Authentication**: Authentication with Haipa clients on generated API clients.
-- **Haipa.ClientRuntime.Configuration**: read and manage local configuration for Haipa clients
-- **Haipa.ClientRuntime.Configuration.Commands**: Powershell commands to manage local haipa configuration
+- **Eryph.ClientRuntime**: core package for all Autorest generated C# Eryph clients
+- **Eryph.ClientRuntime.Authentication**: Authentication with Eryph clients on generated API clients.
+- **Eryph.ClientRuntime.Configuration**: read and manage local configuration for Eryph clients
+- **Eryph.ClientRuntime.Configuration.Commands**: Powershell commands to manage local haipa configuration
 
 ## Platforms & Prerequisites
 
