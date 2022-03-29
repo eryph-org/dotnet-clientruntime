@@ -41,7 +41,7 @@ $config = gc "${cmdletName}.psd1" -Raw
 $config = $config.Replace("ModuleVersion = '0.1'", "ModuleVersion = '${Env:GITVERSION_MajorMinorPatch}'");
 
 if(-not [string]::IsNullOrWhiteSpace($Env:GITVERSION_NuGetPreReleaseTag)) {
-    $config = $config.Replace("# Prerelease = ''", "Prerelease = '-${Env:GITVERSION_NuGetPreReleaseTag}'");
+    $config = $config.Replace("# Prerelease = ''", "Prerelease = '${Env:GITVERSION_NuGetPreReleaseTag}'");
 }
 
 $config | sc "${cmdletName}.psd1"
