@@ -10,6 +10,7 @@ Eryph .NET library for API clients and client configuration management
 - **Eryph.ClientRuntime.Authentication**: Authentication with Eryph clients on generated API clients.
 - **Eryph.ClientRuntime.Configuration**: read and manage local configuration for Eryph clients
 - **Eryph.ClientRuntime.Configuration.Commands**: Powershell commands to manage local eryph configuration
+- **Eryph.ClientRuntime.Powershell**: Powershell base implementations with eryph local configuration
 
 ## Platforms & Prerequisites
 
