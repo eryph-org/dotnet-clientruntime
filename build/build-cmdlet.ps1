@@ -34,8 +34,8 @@ mkdir coreclr | Out-Null
 mkdir desktop | Out-Null
 
 cp $rootDir\build\${cmdletName}* .
-cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\netcoreapp3.0\* coreclr -Exclude $excludedFiles -Recurse
-cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\net472\* desktop  -Exclude $excludedFiles  -Recurse
+cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\netcoreapp3.1\* coreclr -Exclude $excludedFiles -Recurse
+cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\net461\* desktop  -Exclude $excludedFiles  -Recurse
 
 $config = gc "${cmdletName}.psd1" -Raw
 $config = $config.Replace("ModuleVersion = '0.1'", "ModuleVersion = '${Env:GITVERSION_MajorMinorPatch}'");
