@@ -4,7 +4,7 @@ using Eryph.IdentityModel.Clients;
 
 namespace Eryph.ClientRuntime.Configuration
 {
-    internal class PowershellEnvironment : DefaultEnvironment
+    public class PowershellEnvironment : DefaultEnvironment
     {
         private readonly SessionState _sessionState;
 

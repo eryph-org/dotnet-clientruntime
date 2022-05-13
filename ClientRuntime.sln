@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30413.136
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eryph.ClientRuntime", "src\Eryph.ClientRuntime\Eryph.ClientRuntime.csproj", "{25824EA1-C4E0-477F-BA0F-6298B58FFCF1}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eryph.ClientRuntime.Configuration.Commands", "src\Eryph.ClientRuntime.Configuration.Commands\Eryph.ClientRuntime.Configuration.Commands.csproj", "{B8988007-56A6-4752-A341-AF0A333EF947}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eryph.ClientRuntime.Configuration.Tests", "test\Eryph.ClientRuntime.Configuration.Tests\Eryph.ClientRuntime.Configuration.Tests.csproj", "{178994B5-9A68-4F03-AA88-CA1AC79780D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eryph.ClientRuntime.Powershell", "src\Eryph.ClientRuntime.Powershell\Eryph.ClientRuntime.Powershell.csproj", "{A67E34A9-DF68-4A10-906F-C21620D2E2D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{178994B5-9A68-4F03-AA88-CA1AC79780D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{178994B5-9A68-4F03-AA88-CA1AC79780D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{178994B5-9A68-4F03-AA88-CA1AC79780D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A67E34A9-DF68-4A10-906F-C21620D2E2D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A67E34A9-DF68-4A10-906F-C21620D2E2D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A67E34A9-DF68-4A10-906F-C21620D2E2D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A67E34A9-DF68-4A10-906F-C21620D2E2D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

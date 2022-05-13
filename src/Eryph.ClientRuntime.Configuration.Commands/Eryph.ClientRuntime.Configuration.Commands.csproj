@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Eryph.ClientRuntime.Configuration\Eryph.ClientRuntime.Configuration.csproj" />
+    <ProjectReference Include="..\Eryph.ClientRuntime.Powershell\Eryph.ClientRuntime.Powershell.csproj" />
   </ItemGroup>
 
 </Project>
