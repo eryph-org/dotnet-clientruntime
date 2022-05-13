@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using Eryph.ClientRuntime.Powershell;
 using Eryph.IdentityModel.Clients;
 using JetBrains.Annotations;
 

@@ -1,4 +1,5 @@
 ﻿using System.Management.Automation;
+using Eryph.ClientRuntime.Powershell;
 using Eryph.IdentityModel.Clients;
 
 namespace Eryph.ClientRuntime.Configuration

@@ -1,8 +1,7 @@
-﻿using System.Linq;
-using System.Management.Automation;
+﻿using System.Management.Automation;
 using Eryph.IdentityModel.Clients;
 
-namespace Eryph.ClientRuntime.Configuration
+namespace Eryph.ClientRuntime.Powershell
 {
     public class PowershellEnvironment : DefaultEnvironment
     {
