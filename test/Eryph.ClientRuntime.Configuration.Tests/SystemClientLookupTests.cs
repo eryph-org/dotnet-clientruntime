@@ -99,7 +99,7 @@ namespace Eryph.ClientRuntime.Configuration.Tests
             var fileSystemMock = new Mock<IFileSystem>(MockBehavior.Strict);
             fileSystemMock.Setup(x => x.OpenText(It.IsAny<string>())).Throws<FileNotFoundException>();
 
-            fileSystemMock.Setup(x => x.OpenText(It.Is<string>(x => x.EndsWith("system-client.key"))))
+            fileSystemMock.Setup(x => x.OpenText(It.Is<string>(x2 => x2.EndsWith("system-client.key"))))
                 .Returns(new StringReader(TestData.PrivateKeyFileString));
 
             environmentMock.Setup(x => x.FileSystem).Returns(fileSystemMock.Object);

@@ -18,17 +18,17 @@ namespace Eryph.ClientRuntime.Configuration.Tests
             var environmentMock = new Mock<IEnvironment>();
             environmentMock.Setup(x => x.FileSystem).Returns(filesystemMock.Object);
 
-            filesystemMock.Setup(x => x.FileExists(It.Is<string>(x => x.EndsWith("default.config")))).Returns(true);
-            filesystemMock.Setup(x => x.OpenText(It.Is<string>(x => x.EndsWith("default.config"))))
+            filesystemMock.Setup(x => x.FileExists(It.Is<string>(x2 => x2.EndsWith("default.config")))).Returns(true);
+            filesystemMock.Setup(x => x.OpenText(It.Is<string>(x2 => x2.EndsWith("default.config"))))
                 .Returns(new StringReader(
                 "{ \"clients\" : [ {\"id\" : \"id-1\" }, {\"id\" : \"id-2\" }, {\"id\" : \"id-3\" }  ]}"));
 
 
-            filesystemMock.Setup(x => x.FileExists(It.Is<string>(x => 
-                x.EndsWith("id-1.key") || x.EndsWith("id-3.key")))).Returns(true);
+            filesystemMock.Setup(x => x.FileExists(It.Is<string>(x2 => 
+                x2.EndsWith("id-1.key") || x2.EndsWith("id-3.key")))).Returns(true);
 
             filesystemMock.Setup(x => x.OpenText(It.Is<string>(
-                x => x.EndsWith(".key")
+                x2 => x2.EndsWith(".key")
             ))).Returns(() =>  new StringReader(TestData.PrivateKeyFileString));
 
 
