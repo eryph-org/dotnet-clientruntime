@@ -18,25 +18,25 @@ namespace Eryph.ClientRuntime.Configuration
             return _sessionState.Path.CurrentFileSystemLocation.Path;
         }
 
-        public override bool IsProcessRunning(string processName, int processId)
-        {
-           return _sessionState.InvokeCommand.InvokeScript(
-                $"Get-Process {processName} -ErrorAction SilentlyContinue | where Id -eq {processId} | Select -First 1").Any();
+        //public override bool IsProcessRunning(string processName, int processId)
+        //{
+        //   return _sessionState.InvokeCommand.InvokeScript(
+        //        $"Get-Process {processName} -ErrorAction SilentlyContinue | where Id -eq {processId} | Select -First 1").Any();
 
-        }
+        //}
 
-        public override bool IsWindowsAdminUser
-        {
-            get
-            {
-                var result = _sessionState.InvokeCommand.InvokeScript(
-                    "[bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match \"S-1-5-32-544\")").ToArray();
+        //public override bool IsWindowsAdminUser
+        //{
+        //    get
+        //    {
+        //        var result = _sessionState.InvokeCommand.InvokeScript(
+        //            "[bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match \"S-1-5-32-544\")").ToArray();
 
-                if (result.Length == 1)
-                    return (bool)result[0].BaseObject;
+        //        if (result.Length == 1)
+        //            return (bool)result[0].BaseObject;
 
-                return false;
-            }
-        }
+        //        return false;
+        //    }
+        //}
     }
 }
