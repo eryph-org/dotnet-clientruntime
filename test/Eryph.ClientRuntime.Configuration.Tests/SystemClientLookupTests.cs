@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using Eryph.IdentityModel.Clients;
 using Moq;
 using Xunit;
@@ -15,19 +16,26 @@ namespace Eryph.ClientRuntime.Configuration.Tests
         public void GetSystemClient_returns_null_if_process_not_running(bool forEryphZero)
         {
             var environmentMock = new Mock<IEnvironment>(MockBehavior.Strict);
-            var filesystemMock = SetupEnvironmentAndFileSystemWithClientKey(environmentMock);
+            using (var clientStream = new MemoryStream())
+            {
+                var filesystemMock = SetupEnvironmentAndFileSystemWithClientKey(clientStream, environmentMock);
 
-            var moduleName = forEryphZero ? "zero" : "identity";
-            filesystemMock.Setup(x =>
-                    x.OpenText(It.Is<string>(p => p.EndsWith($"{moduleName}{Path.DirectorySeparatorChar}.run_info"))))
-                .Returns(new StringReader("{\"process_id\" : 100, \"url\" : \"http://eryph.io\"}"));
+                // ReSharper disable once ConvertToUsingDeclaration
+                using (var runInfoStream = "{\"process_id\" : 100, \"url\" : \"http://eryph.io\"}".ToStream())
+                {
+                    var moduleName = forEryphZero ? "zero" : "identity";
+                    filesystemMock.Setup(x =>
+                            x.OpenStream(
+                                It.Is<string>(p => p.EndsWith($"{moduleName}{Path.DirectorySeparatorChar}.run_info"))))
+                        .Returns(runInfoStream);
 
+                    environmentMock.Setup(x => x.IsProcessRunning("", 100)).Returns(false);
 
-            environmentMock.Setup(x => x.IsProcessRunning("", 100)).Returns(false);
+                    var lookup = new ClientCredentialsLookup(environmentMock.Object);
 
-            var lookup = new ClientCredentialsLookup(environmentMock.Object);
-
-            Assert.Null(lookup.GetSystemClientCredentials());
+                    Assert.Null(lookup.GetSystemClientCredentials());
+                }
+            }
         }
 
         [Theory]
@@ -38,29 +46,41 @@ namespace Eryph.ClientRuntime.Configuration.Tests
         public void GetSystemClient_considers_configuration(string configurationName)
         {
             var environmentMock = new Mock<IEnvironment>(MockBehavior.Strict);
-            var filesystemMock = SetupEnvironmentAndFileSystemWithClientKey(environmentMock);
-
-            var lockPath = configurationName == "local" ? "identity" : "zero";
-            environmentMock.Setup(x => x.IsOsPlatform(It.Is<OSPlatform>(p => p == OSPlatform.Windows))).Returns(true);
-            environmentMock.Setup(x => x.IsWindowsAdminUser).Returns(true);
-
-            filesystemMock.Setup(x =>
-                    x.OpenText(It.Is<string>(p => p.EndsWith($"{lockPath}{Path.DirectorySeparatorChar}.lock"))))
-                .Returns(() => new StringReader($"{{\"processName\":\"TestingEryph\",\"processId\":100,\"endpoints\":{{\"identity\":\"http://localhost\"}}}}"));
-
-            environmentMock.Setup(x => x.IsProcessRunning("TestingEryph", 100)).Returns(true);
-
-            var lookup = new ClientCredentialsLookup(environmentMock.Object);
-
-            if (configurationName!="zero" && configurationName != "local")
-                Assert.Throws<InvalidOperationException>(() => lookup.GetSystemClientCredentials(configurationName));
-            else
+            using (var clientStream = new MemoryStream())
             {
-                var systemClient = lookup.GetSystemClientCredentials(configurationName);
-                Assert.NotNull(systemClient);
-            }
+                var filesystemMock = SetupEnvironmentAndFileSystemWithClientKey(clientStream, environmentMock);
 
-            filesystemMock.Verify();
+                var lockPath = configurationName == "local" ? "identity" : "zero";
+                environmentMock.Setup(x => x.IsOsPlatform(It.Is<OSPlatform>(p => p == OSPlatform.Windows)))
+                    .Returns(true);
+                environmentMock.Setup(x => x.IsWindowsAdminUser).Returns(true);
+
+                // ReSharper disable once ConvertToUsingDeclaration
+                using (var lockInfoStream =
+                       $"{{\"processName\":\"TestingEryph\",\"processId\":100,\"endpoints\":{{\"identity\":\"http://localhost\"}}}}"
+                           .ToStream())
+                {
+                    filesystemMock.Setup(x =>
+                            x.OpenStream(
+                                It.Is<string>(p => p.EndsWith($"{lockPath}{Path.DirectorySeparatorChar}.lock"))))
+                        .Returns(() =>new WrappedStream(lockInfoStream));
+
+                    environmentMock.Setup(x => x.IsProcessRunning("TestingEryph", 100)).Returns(true);
+
+                    var lookup = new ClientCredentialsLookup(environmentMock.Object);
+
+                    if (configurationName != "zero" && configurationName != "local")
+                        Assert.Throws<InvalidOperationException>(() =>
+                            lookup.GetSystemClientCredentials(configurationName));
+                    else
+                    {
+                        var systemClient = lookup.GetSystemClientCredentials(configurationName);
+                        Assert.NotNull(systemClient);
+                    }
+
+                    filesystemMock.Verify();
+                }
+            }
         }
 
         [Theory]
@@ -70,37 +90,53 @@ namespace Eryph.ClientRuntime.Configuration.Tests
         public void GetSystemClient_reads_process_info(string baseUrl, string identityEndpoint)
         {
             var environmentMock = new Mock<IEnvironment>(MockBehavior.Strict);
-            var filesystemMock = SetupEnvironmentAndFileSystemWithClientKey(environmentMock);
-            
 
-            filesystemMock.Setup(x =>
-                    x.OpenText(It.Is<string>(p => p.EndsWith(".lock"))))
-                .Returns( () => new StringReader($"{{\"processName\":\"TestingEryph\",\"processId\":100,\"endpoints\":{{\"identity\":\"{baseUrl}\"}}}}"));
+            using (var clientStream = new MemoryStream())
+            {
+                var filesystemMock = SetupEnvironmentAndFileSystemWithClientKey(clientStream,environmentMock);
 
-            environmentMock.Setup(x => x.IsProcessRunning("TestingEryph", 100)).Returns(true);
+                // ReSharper disable once ConvertToUsingDeclaration
+                using (var lockInfoStream =
+                       $"{{\"processName\":\"TestingEryph\",\"processId\":100,\"endpoints\":{{\"identity\":\"{baseUrl}\"}}}}"
+                           .ToStream())
+                {
 
-            var lookup = new ClientCredentialsLookup(environmentMock.Object);
-            var response = lookup.GetSystemClientCredentials();
+                    filesystemMock.Setup(x =>
+                            x.OpenStream(It.Is<string>(p => p.EndsWith(".lock"))))
+                        .Returns(() => new WrappedStream(lockInfoStream));
 
-            Assert.NotNull(response);
-            Assert.Equal(identityEndpoint, response.IdentityProvider.ToString());
-            Assert.NotNull(response.KeyPairData);
-            Assert.Equal("system-client", response.Id);
+                    environmentMock.Setup(x => x.IsProcessRunning("TestingEryph", 100)).Returns(true);
 
-            environmentMock.Verify();
-            filesystemMock.Verify();
+                    var lookup = new ClientCredentialsLookup(environmentMock.Object);
+                    var response = lookup.GetSystemClientCredentials();
+
+                    Assert.NotNull(response);
+                    Assert.Equal(identityEndpoint, response.IdentityProvider.ToString());
+                    Assert.NotNull(response.KeyPairData);
+                    Assert.Equal("system-client", response.Id);
+
+                    environmentMock.Verify();
+                    filesystemMock.Verify();
+                }
+            }
         }
 
-        private Mock<IFileSystem> SetupEnvironmentAndFileSystemWithClientKey(Mock<IEnvironment> environmentMock)
+        private Mock<IFileSystem> SetupEnvironmentAndFileSystemWithClientKey(Stream clientFileStream, Mock<IEnvironment> environmentMock)
         {
             environmentMock.Setup(x => x.IsOsPlatform(It.Is<OSPlatform>(p => p == OSPlatform.Windows))).Returns(false);
             environmentMock.Setup(x => x.IsOsPlatform(It.Is<OSPlatform>(p => p == OSPlatform.Linux))).Returns(true);
 
-            var fileSystemMock = new Mock<IFileSystem>(MockBehavior.Strict);
-            fileSystemMock.Setup(x => x.OpenText(It.IsAny<string>())).Throws<FileNotFoundException>();
+            // ReSharper disable once ConvertToUsingDeclaration
+            var streamWriter = new StreamWriter(clientFileStream, Encoding.UTF8, 2048, true);
+            streamWriter.Write(TestData.PrivateKeyFileString);
+            streamWriter.Flush();
+            clientFileStream.Seek(0, SeekOrigin.Begin);
 
-            fileSystemMock.Setup(x => x.OpenText(It.Is<string>(x2 => x2.EndsWith("system-client.key"))))
-                .Returns(new StringReader(TestData.PrivateKeyFileString));
+            var fileSystemMock = new Mock<IFileSystem>(MockBehavior.Strict);
+            fileSystemMock.Setup(x => x.OpenStream(It.IsAny<string>())).Throws<FileNotFoundException>();
+
+            fileSystemMock.Setup(x => x.OpenStream(It.Is<string>(x2 => x2.EndsWith("system-client.key"))))
+                .Returns(() =>new WrappedStream(clientFileStream));
 
             environmentMock.Setup(x => x.FileSystem).Returns(fileSystemMock.Object);
             return fileSystemMock;
