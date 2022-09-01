@@ -61,7 +61,7 @@ namespace Eryph.ClientRuntime.Configuration
                 var configFileName = Path.Combine(StorePath, $"{_configName}.config");
                 if (_environment.FileSystem.FileExists(configFileName))
                 {
-                    using (var reader = _environment.FileSystem.OpenText(configFileName))
+                    using (var reader = new StreamReader(_environment.FileSystem.OpenStream(configFileName)))
                     {
                         var configJson = reader.ReadToEnd();
                         _config = JsonConvert.DeserializeObject<ClientConfig>(configJson);
@@ -92,7 +92,7 @@ namespace Eryph.ClientRuntime.Configuration
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
 
                 });
-                using (var writer = _environment.FileSystem.CreateText(configFileName))
+                using (var writer = new StreamWriter(_environment.FileSystem.OpenStream(configFileName)))
                     writer.Write(settingsJson);
                 _config = null;
             }
