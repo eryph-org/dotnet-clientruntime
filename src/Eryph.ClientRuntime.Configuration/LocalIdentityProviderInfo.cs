@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security;
+using System.Text;
 using Eryph.IdentityModel.Clients;
 using Eryph.IdentityModel.Clients.Internal;
 using Newtonsoft.Json.Linq;
@@ -47,7 +49,7 @@ namespace Eryph.ClientRuntime.Configuration
 
             try
             {
-                using (var reader = Environment.FileSystem.OpenText(lockFilePath))
+                using (var reader = new StreamReader(Environment.FileSystem.OpenStream(lockFilePath)))
                 {
                     var lockFileData = reader.ReadToEnd();
                     return JObject.Parse(lockFileData).ToObject<IDictionary<string, object>>();
@@ -87,7 +89,25 @@ namespace Eryph.ClientRuntime.Configuration
             var privateKeyPath = Path.Combine(applicationDataPath,
                 $@"{_identityProviderName}{Path.DirectorySeparatorChar}private{Path.DirectorySeparatorChar}clients{Path.DirectorySeparatorChar}system-client.key");
 
-            return PrivateKey.ToSecureString(PrivateKey.ReadFile(privateKeyPath, Environment.FileSystem));
+            var endpoints = GetEndpoints();
+
+            if(!endpoints.ContainsKey("identity"))
+                throw new IOException("Could not find eryph-zero identity endpoint.");
+
+            var entropy = Encoding.UTF8.GetBytes(endpoints["identity"].ToString());
+
+            var privateKey =
+                PrivateKey.ReadFile(privateKeyPath, Environment.FileSystem, PrivateKeyProtectionLevel.Machine, entropy);
+            
+            if (privateKey == null)
+            {
+                //second chance - read without encryption
+                privateKey = PrivateKey.ReadFile(privateKeyPath, Environment.FileSystem);
+                if (privateKey == null)
+                    throw new IOException("could not read system-client private key");
+            }
+
+            return PrivateKey.ToSecureString(privateKey);
 
         }
     }
