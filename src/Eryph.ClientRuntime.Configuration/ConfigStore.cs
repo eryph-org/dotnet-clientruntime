@@ -92,7 +92,7 @@ namespace Eryph.ClientRuntime.Configuration
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
 
                 });
-                using (var writer = new StreamWriter(_environment.FileSystem.OpenStream(configFileName)))
+                using (var writer = new StreamWriter(_environment.FileSystem.CreateStream(configFileName)))
                     writer.Write(settingsJson);
                 _config = null;
             }
