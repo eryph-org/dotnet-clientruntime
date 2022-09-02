@@ -59,7 +59,7 @@ namespace Eryph.ClientRuntime.Configuration.Tests
             // ReSharper disable once ConvertToUsingDeclaration
             using (var memoryStream = new MemoryStream())
             {
-                filesystemMock.Setup(x => x.OpenStream(It.Is<string>(
+                filesystemMock.Setup(x => x.CreateStream(It.Is<string>(
                     p => p.EndsWith("local.config")))).Returns(new WrappedStream(memoryStream));
 
                 var writer = new ConfigStoresWriter(environmentMock.Object, "local");
