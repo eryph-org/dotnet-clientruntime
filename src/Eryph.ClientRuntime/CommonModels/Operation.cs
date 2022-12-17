@@ -24,13 +24,14 @@ namespace Eryph.ClientRuntime
         /// </summary>
         /// <param name="status">Possible values include: 'Queued', 'Running',
         /// 'Failed', 'Completed'</param>
-        public Operation(string id = default(string), string status = default(string), string statusMessage = default(string), IList<OperationResource> resources = default(IList<OperationResource>), IList<OperationLogEntry> logEntries = default(IList<OperationLogEntry>))
+        public Operation(string id = default(string), string status = default(string), string statusMessage = default(string), IList<OperationResource> resources = default(IList<OperationResource>), IList<OperationLogEntry> logEntries = default(IList<OperationLogEntry>), IList<Project> projects = default(IList<Project>))
         {
             Id = id;
             Status = status;
             StatusMessage = statusMessage;
             Resources = resources;
             LogEntries = logEntries;
+            Projects = projects;
             CustomInit();
         }
 
@@ -65,6 +66,11 @@ namespace Eryph.ClientRuntime
         /// </summary>
         [JsonProperty(PropertyName = "logEntries")]
         public IList<OperationLogEntry> LogEntries { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "projects")]
+        public IList<Project> Projects { get; set; }
 
     }
 }

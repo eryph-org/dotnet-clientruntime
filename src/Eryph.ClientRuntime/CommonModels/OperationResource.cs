@@ -20,8 +20,8 @@ namespace Eryph.ClientRuntime
         /// <summary>
         /// Initializes a new instance of the OperationResource class.
         /// </summary>
-        /// <param name="resourceType">Possible values include:
-        /// 'Machine'</param>
+        /// <param name="resourceType">Possible values include: 'Catlet',
+        /// 'VirtualDisk', 'VirtualNetwork'</param>
         public OperationResource(string id = default(string), string resourceId = default(string), string resourceType = default(string))
         {
             Id = id;
@@ -46,7 +46,8 @@ namespace Eryph.ClientRuntime
         public string ResourceId { get; set; }
 
         /// <summary>
-        /// Gets or sets possible values include: 'Machine'
+        /// Gets or sets possible values include: 'Catlet', 'VirtualDisk',
+        /// 'VirtualNetwork'
         /// </summary>
         [JsonProperty(PropertyName = "resourceType")]
         public string ResourceType { get; set; }
