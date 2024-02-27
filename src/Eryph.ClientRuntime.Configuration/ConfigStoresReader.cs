@@ -57,8 +57,16 @@ namespace Eryph.ClientRuntime.Configuration
         }
 
         public IEnumerable<ClientData> GetClients()
-        {   
-            return _stores.Where(x => x.Exists).SelectMany(x => x.GetClients()).ToArray();
+        {
+            return _stores.Where(x => x.Exists).Select(x => new ClientsByStore
+            {
+                StoreLocation = x.Location,
+                Clients = x.GetClients()
+            })
+                .OrderBy(x=>x.StoreLocation)
+                .SelectMany(x=>x.Clients)
+                .Distinct(new ClientsComparer())
+                .ToArray();
         }
 
 
@@ -91,5 +99,31 @@ namespace Eryph.ClientRuntime.Configuration
             yield return ConfigStore.GetStore(ConfigStoreLocation.System, environment, configName);
 
         }
+
+        private class ClientsByStore
+        {
+            public ConfigStoreLocation StoreLocation { get; set; }
+            public IEnumerable<ClientData> Clients { get; set; }
+
+        }
+
+        private class ClientsComparer : IEqualityComparer<ClientData>
+        {
+            public bool Equals(ClientData x, ClientData y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (x is null) return false;
+                if (y is null) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return x.Id == y.Id;
+            }
+
+            public int GetHashCode(ClientData obj)
+            {
+                return (obj.Id != null ? obj.Id.GetHashCode() : 0);
+            }
+        }
     }
+
+
 }
