@@ -18,10 +18,11 @@ namespace Eryph.ClientRuntime.Configuration
         private readonly string _configName;
         private readonly IEnvironment _environment;
 
-        private ConfigStore(string configName, string basePath, IEnvironment environment)
+        private ConfigStore(string configName, string basePath, IEnvironment environment, ConfigStoreLocation location)
         {
             _configName = configName;
             _environment = environment;
+            Location = location;
 
             StorePath = ".eryph";
             if (basePath != null)
@@ -29,9 +30,10 @@ namespace Eryph.ClientRuntime.Configuration
         }
 
         public string StorePath { get; }
+        public ConfigStoreLocation Location { get; }
 
         private ClientConfig _config;
-        private object _syncRoot = new object();
+        private readonly object _syncRoot = new object();
 
         public IReadOnlyDictionary<string, Uri> Endpoints => 
             new ReadOnlyDictionary<string, Uri>(GetSettings().Endpoints??new Dictionary<string, Uri>());
@@ -234,7 +236,7 @@ namespace Eryph.ClientRuntime.Configuration
                     throw new ArgumentOutOfRangeException(nameof(location), location, null);
             }
 
-            return new ConfigStore(configName, basePath, environment);
+            return new ConfigStore(configName, basePath, environment, location);
         }
     }
 }
