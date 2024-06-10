@@ -12,8 +12,7 @@ namespace Eryph.ClientRuntime.Authentication
         {
             var tokenCredential = new EryphTokenCredential(credentials);
 
-            var authPolicy = new BearerTokenAuthenticationPolicy(tokenCredential, scope);
-            return HttpPipelineBuilder.Build(options, authPolicy);
+            return options.BuildHttpPipeline(tokenCredential, scope);
         }
 
         public static HttpPipeline BuildHttpPipeline(this ClientOptions options, IEnvironment sysEnv, string scope)
@@ -21,8 +20,24 @@ namespace Eryph.ClientRuntime.Authentication
             var tokenCredential = new EryphTokenCredential(
                 new ClientCredentialsLookup(sysEnv).GetDefaultCredentials());
 
+            return options.BuildHttpPipeline(tokenCredential, scope);
+        }
+
+        private static HttpPipeline BuildHttpPipeline(
+            this ClientOptions options,
+            TokenCredential tokenCredential,
+            string scope)
+        {
             var authPolicy = new BearerTokenAuthenticationPolicy(tokenCredential, scope);
-            return HttpPipelineBuilder.Build(options, authPolicy);
+
+            var pipelineOptions = new HttpPipelineOptions(options)
+            {
+                RequestFailedDetailsParser = new EryphRequestFailedDetailsParser(),
+                ResponseClassifier = new ResponseClassifier()
+            };
+            pipelineOptions.PerRetryPolicies.Add(authPolicy);
+
+            return HttpPipelineBuilder.Build(pipelineOptions);
         }
     }
 }

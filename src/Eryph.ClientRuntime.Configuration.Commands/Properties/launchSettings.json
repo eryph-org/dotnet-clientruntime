@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "Eryph.ClientRuntime.Configuration.Commands": {
+      "commandName": "Project"
+    },
+    "Run in Powershell": {
+      "commandName": "Executable",
+      "executablePath": "Powershell.exe",
+      "commandLineArgs": "-NoProfile -NoExit -Command \"Import-Module $(TargetPath)\""
+    },
+    "Run in Powershell Core": {
+      "commandName": "Executable",
+      "executablePath": "pwsh.exe",
+      "commandLineArgs": "-NoProfile -NoExit -Command \"Import-Module $(TargetPath)\""
+    }
+  }
+}
