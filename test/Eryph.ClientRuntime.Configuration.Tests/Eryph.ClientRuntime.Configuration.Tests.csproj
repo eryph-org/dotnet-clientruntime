@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;net6.0</TargetFrameworks>
+    <LangVersion>12</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;net6.0</TargetFrameworks>
+    <LangVersion>12</LangVersion>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RootNamespace>Eryph.ClientRuntime.Configuration</RootNamespace>
     <IsPackable>false</IsPackable>
