@@ -4,6 +4,10 @@ param (
     [Parameter()]
     [string]
     [ValidateNotNullOrEmpty()]
+    $ModuleName = "Eryph.ClientRuntime.Configuration",
+    [Parameter()]
+    [string]
+    [ValidateNotNullOrEmpty()]
     $Configuration = "Debug",
     [Parameter()]
     [string]
@@ -12,19 +16,18 @@ param (
 )
 
 $ErrorActionPreference = 'Stop'
-$cmdletName = "Eryph.ClientRuntime.Configuration"
 
 if ($OutputDir -eq ".") {
     $OutputDir = Resolve-Path (Join-path $PSScriptRoot "..")
 }
 
 $rootDir = Resolve-Path (Join-Path $PSScriptRoot "..")
-$cmdletPath = Join-Path $OutputDir "cmdlet"
+$modulePath = Join-Path $OutputDir "cmdlet"
 
-if (Test-Path $cmdletPath ) {
-    Remove-Item $cmdletPath -Force -Recurse -ErrorAction Stop
+if (Test-Path $modulePath ) {
+    Remove-Item $modulePath -Force -Recurse -ErrorAction Stop
 }
-$null = New-Item -ItemType Directory $cmdletPath
+$null = New-Item -ItemType Directory $modulePath
 
-$buildOutputPath = Join-Path $rootDir "src" "$cmdletName.Commands" "cmdlet"
-Copy-Item $buildOutputPath\* $cmdletPath -Recurse
+$buildOutputPath = Join-Path $rootDir "src" "$ModuleName.Commands" "bin" "Module"
+Copy-Item $buildOutputPath\* $modulePath -Recurse
