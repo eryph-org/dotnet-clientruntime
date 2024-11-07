@@ -18,7 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Eryph.IdentityModel.Clients" Version="0.5.2-PullRequest0035.7" />
+    <PackageReference Include="Eryph.IdentityModel.Clients" Version="0.5.2-PullRequest0035.11" />
   </ItemGroup>
 
 </Project>

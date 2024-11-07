@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;net6.0</TargetFrameworks>
+    <TargetFrameworks>net462;net8.0</TargetFrameworks>
     <LangVersion>12</LangVersion>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RootNamespace>Eryph.ClientRuntime.Configuration</RootNamespace>
     <IsPackable>false</IsPackable>
+	<CmdletName>Eryph.ClientRuntime.Configuration</CmdletName>
   </PropertyGroup>
 
     <ItemGroup>
@@ -16,6 +17,7 @@
       <PackageReference Include="PowerShellStandard.Library" Version="5.1.1">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+	    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,4 +25,17 @@
     <ProjectReference Include="..\Eryph.ClientRuntime.Powershell\Eryph.ClientRuntime.Powershell.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="pwsh.exe -NoProfile -File $(ProjectDir)../../build/Package-Cmdlet.ps1 -OutputDirectory $(ProjectDir)bin -TargetPath $(TargetPath) -TargetFramework $(TargetFramework) -MajorMinorPatch $(GitVersion_MajorMinorPatch) -NuGetPreReleaseTag $(GitVersion_NuGetPreReleaseTag)" />
+  </Target>
+  <Target Name="PostClean" AfterTargets="Clean">
+	  <Exec Command="pwsh.exe -NoProfile -File $(ProjectDir)../../build/Package-Cmdlet.ps1 -Clean -OutputDirectory $(ProjectDir)bin" />
+  </Target>
+
+	<PropertyGroup>
+		<PowershellExecutable>pwsh.exe</PowershellExecutable>
+</PropertyGroup>
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
+	  <PowershellExecutable>powershell.exe</PowershellExecutable>
+  </PropertyGroup>
 </Project>

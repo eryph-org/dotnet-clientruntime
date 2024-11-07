@@ -1,7 +1,9 @@
 param ($Configuration = "Debug", $OutputDir = ".")
 
 $cmdletName = "Eryph.ClientRuntime.Configuration"
-$excludedFiles = @("System.Management.Automation.dll", "JetBrains.Annotations.dll")
+
+# $Env:GITVERSION_MajorMinorPatch = "0.7.1"
+# $Env:GITVERSION_NuGetPreReleaseTag = "ci0030"
 
 # If this script is not running on a build server, remind user to 
 # set environment variables so that this script can be debugged
@@ -14,36 +16,17 @@ if(-not ($Env:GITVERSION_MajorMinorPatch))
     exit 1
 }
 
-
-Push-Location $PSScriptRoot
-cd ..
-$rootDir = Get-Location
-
-Push-Location $OutputDir
-
-if(Test-Path cmdlet ) {
-    rm cmdlet -Force -Recurse  -ErrorAction Stop
+if ($OutputDir -eq ".") {
+    $OutputDir = Resolve-Path (Join-path $PSScriptRoot "..")
 }
 
-mkdir cmdlet | Out-Null
-cd cmdlet
-mkdir ${cmdletName} | Out-Null
-cd ${cmdletName}
+$rootDir = Resolve-Path (Join-Path $PSScriptRoot "..")
+$cmdletPath = Join-Path $OutputDir cmdlet
 
-mkdir coreclr | Out-Null
-mkdir desktop | Out-Null
-
-cp $rootDir\build\${cmdletName}* .
-cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\net6.0\* coreclr -Exclude $excludedFiles -Recurse
-cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\net462\* desktop  -Exclude $excludedFiles  -Recurse
-
-$config = gc "${cmdletName}.psd1" -Raw
-$config = $config.Replace("ModuleVersion = '0.1'", "ModuleVersion = '${Env:GITVERSION_MajorMinorPatch}'");
-
-if(-not [string]::IsNullOrWhiteSpace($Env:GITVERSION_NuGetPreReleaseTag)) {
-    $config = $config.Replace("# Prerelease = ''", "Prerelease = '${Env:GITVERSION_NuGetPreReleaseTag}'");
+if (Test-Path cmdletPath ) {
+    Remove-Item cmdletPath -Force -Recurse -ErrorAction Stop
 }
+$null = New-Item -ItemType Directory $cmdletPath
 
-$config | sc "${cmdletName}.psd1"
-
-Pop-Location
+$buildOutputPath = Join-Path $rootDir src "$cmdletName.Commands" cmdlet
+Copy-Item $buildOutputPath\* $cmdletPath -Recurse
