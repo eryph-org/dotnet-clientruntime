@@ -65,7 +65,8 @@ if (-not [string]::IsNullOrWhiteSpace($NuGetPreReleaseTag)) {
 Set-Content -Path (Join-Path $modulePath "$ModuleName.psd1") -Value $config
 Copy-Item -Path (Join-Path $PSScriptRoot "$ModuleName.psm1") -Destination $modulePath
 
-# Verify that all Cmdlets are exposed in the manifest
+# Verify that all Cmdlets are exposed in the manifest. We must load the modules
+# in separate Powershell processes to avoid conflicts.
 $powershell = $isWindowsPowershell ? 'powershell.exe' : 'pwsh.exe'
 $moduleCmdlets = (& $powershell -Command "[array](Import-Module -Scope Local $modulePath -PassThru).ExportedCmdlets.Keys -join ','") -split ','
 $assemblyCmdlets = (& $powershell -Command "[array](Import-Module -Scope Local $TargetPath -PassThru).ExportedCmdlets.Keys -join ','") -split ','
