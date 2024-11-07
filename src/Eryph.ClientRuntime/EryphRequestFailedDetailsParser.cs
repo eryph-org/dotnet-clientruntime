@@ -12,6 +12,9 @@ namespace Eryph.ClientRuntime;
 
 public class EryphRequestFailedDetailsParser : RequestFailedDetailsParser
 {
+    private static readonly Lazy<JsonSerializerOptions> JsonSerializerOptions = new(() =>
+        new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
     public override bool TryParse(
         Response response,
         out ResponseError? error,
@@ -87,10 +90,7 @@ public class EryphRequestFailedDetailsParser : RequestFailedDetailsParser
         {
             problemDetails = JsonSerializer.Deserialize<ProblemDetails>(
                 content,
-                new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true,
-                });
+                JsonSerializerOptions.Value);
             return true;
         }
         catch (JsonException)

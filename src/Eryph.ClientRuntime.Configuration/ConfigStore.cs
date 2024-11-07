@@ -16,6 +16,13 @@ namespace Eryph.ClientRuntime.Configuration
     [PublicAPI]
     public class ConfigStore
     {
+        private static readonly Lazy<JsonSerializerOptions> JsonOptions = new(() =>
+            new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                WriteIndented = true,
+            });
+
         private readonly string _configName;
         private readonly IEnvironment _environment;
 
@@ -66,7 +73,7 @@ namespace Eryph.ClientRuntime.Configuration
                 {
                     using var reader = new StreamReader(_environment.FileSystem.OpenStream(configFileName));
                     var configJson = reader.ReadToEnd();
-                    _config = JsonSerializer.Deserialize<ClientConfig>(configJson);
+                    _config = JsonSerializer.Deserialize<ClientConfig>(configJson, JsonOptions.Value);
                 }
                 else
                 {
@@ -87,14 +94,7 @@ namespace Eryph.ClientRuntime.Configuration
 
                 var configFileName = Path.Combine(StorePath, $"{_configName}.config");
 
-                var settingsJson = JsonSerializer.Serialize(
-                    settings,
-                    new JsonSerializerOptions(JsonSerializerDefaults.General)
-                    {
-                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        WriteIndented = true,
-                    });
+                var settingsJson = JsonSerializer.Serialize(settings, JsonOptions.Value);
                 using (var writer = new StreamWriter(_environment.FileSystem.CreateStream(configFileName)))
                     writer.Write(settingsJson);
                 _config = null;
