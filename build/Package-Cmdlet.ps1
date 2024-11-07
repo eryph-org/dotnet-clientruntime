@@ -11,22 +11,23 @@
 param(
     [Parameter()]
     [string]
+    [ValidateScript({ Test-Path $_ }, ErrorMessage = "The path '{0}' is invalid.")]
     $TargetPath,
     [Parameter()]
     [string]
+    [ValidateScript({ $_ -match 'net\d+\.\d+' }, ErrorMessage = "The target framework '{0}' is invalid.")]
     $TargetFramework,
     [Parameter()]
     [string]
+    [ValidateScript({ Test-Path $_ }, ErrorMessage = "The path '{0}' is invalid.")]
     $OutputDirectory,
     [Parameter()]
     [string]
+    [ValidateScript({ $_ -match '\d+\.\d+\.\d+' }, ErrorMessage = "The version '{0}' is invalid.")]
     $MajorMinorPatch,
     [Parameter()]
     [string]
-    $NuGetPreReleaseTag,
-    [Parameter()]
-    [switch]
-    $Clean
+    $NuGetPreReleaseTag
 )
 
 $ErrorActionPreference = 'Stop'
@@ -38,32 +39,9 @@ if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
     throw "The OutputDirectory parameter is missing."
 }
 
-if ($Clean) {
-    return
-}
-
 $cmdletPath = Join-Path $OutputDirectory "cmdlet" $cmdletName
 $isWindowsPowershell = $TargetFramework -like 'net4*'
 $cmdletAssemblyPath = Join-Path $cmdletPath ($isWindowsPowershell  ? 'desktop' : 'coreclr')
-# if ($Clean) {
-#     if (Test-Path $cmdletAssemblyPath) {
-#         Remove-Item -Path $cmdletAssemblyPath -Force -Recurse
-#     }
-#     return
-# }
-
-if ([string]::IsNullOrWhiteSpace($TargetFramework)) {
-    throw "The TargetFramework parameter is missing."
-}
-
-
-if ([string]::IsNullOrWhiteSpace($TargetPath)) {
-    throw "The TargetPath parameter is missing."
-}
-
-if ([string]::IsNullOrWhiteSpace($MajorMinorPatch)) {
-    throw "The MajorMinorPatch parameter is missing."
-}
 
 # Prepare the output directory
 $cmdletPath = Join-Path $OutputDirectory "cmdlet" $cmdletName
