@@ -24,16 +24,20 @@
     <ProjectReference Include="..\Eryph.ClientRuntime.Powershell\Eryph.ClientRuntime.Powershell.csproj" />
   </ItemGroup>
 
-	<PropertyGroup>
-		<PsModuleName>Eryph.ClientRuntime.Configuration</PsModuleName>
-		<PowershellExecutable>pwsh.exe</PowershellExecutable>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
-		<PowershellExecutable>powershell.exe</PowershellExecutable>
-	</PropertyGroup>
+  <!-- Custom properties and targets for packaging the Powershell module -->
+  <PropertyGroup>
+    <PsModuleName>Eryph.ClientRuntime.Configuration</PsModuleName>
+    <PowershellExecutable>pwsh.exe</PowershellExecutable>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <PowershellExecutable>powershell.exe</PowershellExecutable>
+  </PropertyGroup>
+  
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="pwsh.exe -NoProfile -File &quot;$(ProjectDir)../../build/Package-Cmdlet.ps1&quot; -ModuleName &quot;$(PsModuleName)&quot; -OutputDirectory &quot;$(ProjectDir)bin&quot; -TargetPath &quot;$(TargetPath)&quot; -TargetFramework &quot;$(TargetFramework)&quot; -MajorMinorPatch &quot;$(GitVersion_MajorMinorPatch)&quot; -NuGetPreReleaseTag &quot;$(GitVersion_NuGetPreReleaseTag)&quot;" />
+    <Exec Command="pwsh.exe -NoProfile -File &quot;$(ProjectDir)../../build/Package-PsModule.ps1&quot; -ModuleName &quot;$(PsModuleName)&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(ProjectDir), 'bin', $(Configuration)))&quot; -TargetPath &quot;$(TargetPath)&quot; -TargetFramework &quot;$(TargetFramework)&quot; -MajorMinorPatch &quot;$(GitVersion_MajorMinorPatch)&quot; -NuGetPreReleaseTag &quot;$(GitVersion_NuGetPreReleaseTag)&quot;" />
   </Target>
-
+  <Target Name="PostClean" AfterTargets="Clean">
+    <Exec Command="pwsh.exe -NoProfile -File &quot;$(ProjectDir)../../build/Clean-PsModule.ps1&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(ProjectDir), 'bin', $(Configuration)))&quot;" />
+  </Target>
 
 </Project>

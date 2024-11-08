@@ -1,11 +1,11 @@
 #Requires -Version 7.4
 <#
     .SYNOPSIS
-        Package the the Powershell module.
+        Package the Powershell module.
     .DESCRIPTION
-        This script packages the Powershell module for distribution. It is intended
-        to be called by MSBuild during the normal build process. The script will
-        be called once for each target framework.
+        This script packages the Powershell module for distribution.
+        It is intended to be called by MSBuild during the normal build
+        process. The script will be called once for each target framework.
 #>
 [CmdletBinding()]
 param(
@@ -39,7 +39,7 @@ $ErrorActionPreference = 'Stop'
 
 $excludedFiles = @("System.Management.Automation.dll", "JetBrains.Annotations.dll")
 
-$modulePath = Join-Path $OutputDirectory "Module" $ModuleName
+$modulePath = Join-Path $OutputDirectory "PsModule" $ModuleName
 $isWindowsPowershell = $TargetFramework -like 'net4*'
 $moduleAssemblyPath = Join-Path $modulePath ($isWindowsPowershell  ? 'desktop' : 'coreclr')
 

@@ -3,7 +3,7 @@
     "Run in Powershell": {
       "commandName": "Executable",
       "executablePath": "$(PowershellExecutable)",
-      "commandLineArgs": "-NoProfile -NoExit -Command \"Import-Module '$(ProjectDir)bin/Module/$(PsModuleName)'\""
+      "commandLineArgs": "-NoProfile -NoExit -Command \"Import-Module '$(ProjectDir)bin/$(Configuration)/PsModule/$(PsModuleName)'\""
     }
   }
 }
