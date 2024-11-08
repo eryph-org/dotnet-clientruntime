@@ -17,14 +17,14 @@ param (
     [Parameter()]
     [string]
     [ValidateScript({ Test-Path $_ }, ErrorMessage = "The path '{0}' is invalid.")]
-    $ArtifactDirectory
+    $OutputDir
 )
 
 $ErrorActionPreference = 'Stop'
 $moduleName = "Eryph.ClientRuntime.Configuration"
 
 $repositoryPath = Resolve-Path (Join-Path $PSScriptRoot "..")
-$targetPath = Join-Path $ArtifactDirectory "cmdlet"
+$targetPath = Join-Path $OutputDir "cmdlet"
 
 if (Test-Path $targetPath ) {
     Remove-Item $targetPath -Force -Recurse
