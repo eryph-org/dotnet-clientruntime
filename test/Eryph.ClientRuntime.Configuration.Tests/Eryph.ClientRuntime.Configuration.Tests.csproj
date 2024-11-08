@@ -4,6 +4,7 @@
     <TargetFrameworks>net462;net8.0</TargetFrameworks>
     <LangVersion>12</LangVersion>
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Eryph.ClientRuntime.Configuration\Eryph.ClientRuntime.Configuration.csproj" />
   </ItemGroup>
-
 
 </Project>

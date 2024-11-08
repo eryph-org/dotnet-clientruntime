@@ -2,27 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>12</LangVersion>
-    <SignAssembly>false</SignAssembly>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/eryph-org/dotnet-clientruntime</PackageProjectUrl>
-    <Copyright>dbosoft GmbH</Copyright>
-    <Authors>dbosoft and Eryph contributors</Authors>
-    <Company>dbosoft GmbH</Company>
-    <Product>Eryph</Product>
-    <RepositoryUrl>https://github.com/eryph-org/dotnet-clientruntime</RepositoryUrl>
-    <Description>Common implementation for eryph powershell modules</Description>
+    <Description>Common implementation for eryph powershell modules.</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.1">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+  </ItemGroup>
+  
+  <ItemGroup>
     <ProjectReference Include="..\Eryph.ClientRuntime.Configuration\Eryph.ClientRuntime.Configuration.csproj" />
   </ItemGroup>
 

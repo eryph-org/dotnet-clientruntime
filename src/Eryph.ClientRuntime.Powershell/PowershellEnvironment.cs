@@ -25,19 +25,5 @@ namespace Eryph.ClientRuntime.Powershell
             var isRunning = scriptBlock.Invoke().Any();
             return isRunning;
         }
-
-        //public override bool IsWindowsAdminUser
-        //{
-        //    get
-        //    {
-        //        var result = _sessionState.InvokeCommand.InvokeScript(
-        //            "[bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match \"S-1-5-32-544\")").ToArray();
-
-        //        if (result.Length == 1)
-        //            return (bool)result[0].BaseObject;
-
-        //        return false;
-        //    }
-        //}
     }
 }
