@@ -73,13 +73,13 @@ FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @(
-    "Add-EryphClientConfiguration"
-    "Get-EryphAccessToken"
-    "Get-EryphClientConfiguration"
-    "Set-EryphClientConfiguration"
-    "Remove-EryphClientConfiguration"
-    "New-EryphClientCredentials"
-    "Get-EryphClientCredentials"
+    "Add-EryphClientConfiguration",
+    "Get-EryphAccessToken",
+    "Get-EryphClientConfiguration",
+    "Set-EryphClientConfiguration",
+    "Remove-EryphClientConfiguration",
+    "New-EryphClientCredentials",
+    "Get-EryphClientCredentials",
     "Set-EryphConfigurationStore"
 )
 
