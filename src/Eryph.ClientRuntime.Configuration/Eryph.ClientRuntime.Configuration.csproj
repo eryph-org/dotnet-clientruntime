@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eryph.IdentityModel.Clients" Version="0.5.2-PullRequest0035.17" />
+    <PackageReference Include="Eryph.IdentityModel.Clients" Version="0.6.0" />
   </ItemGroup>
 
 </Project>
