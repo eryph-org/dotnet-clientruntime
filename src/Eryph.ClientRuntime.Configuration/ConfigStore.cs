@@ -4,17 +4,25 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Xml;
 using Eryph.IdentityModel.Clients;
 using Eryph.IdentityModel.Clients.Internal;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Eryph.ClientRuntime.Configuration
 {
     [PublicAPI]
     public class ConfigStore
     {
+        private static readonly Lazy<JsonSerializerOptions> JsonOptions = new(() =>
+            new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                WriteIndented = true,
+            });
+
         private readonly string _configName;
         private readonly IEnvironment _environment;
 
@@ -43,7 +51,7 @@ namespace Eryph.ClientRuntime.Configuration
 
         public IEnumerable<ClientData> GetClients()
         {
-            return from client in (GetSettings().Clients ?? new ClientData[0]) 
+            return from client in (GetSettings().Clients ?? Array.Empty<ClientData>()) 
                 select new ClientData(client.Id, client.Name);
         }
 
@@ -63,11 +71,9 @@ namespace Eryph.ClientRuntime.Configuration
                 var configFileName = Path.Combine(StorePath, $"{_configName}.config");
                 if (_environment.FileSystem.FileExists(configFileName))
                 {
-                    using (var reader = new StreamReader(_environment.FileSystem.OpenStream(configFileName)))
-                    {
-                        var configJson = reader.ReadToEnd();
-                        _config = JsonConvert.DeserializeObject<ClientConfig>(configJson);
-                    }
+                    using var reader = new StreamReader(_environment.FileSystem.OpenStream(configFileName));
+                    var configJson = reader.ReadToEnd();
+                    _config = JsonSerializer.Deserialize<ClientConfig>(configJson, JsonOptions.Value);
                 }
                 else
                 {
@@ -88,12 +94,7 @@ namespace Eryph.ClientRuntime.Configuration
 
                 var configFileName = Path.Combine(StorePath, $"{_configName}.config");
 
-                var settingsJson = JsonConvert.SerializeObject(settings, Formatting.Indented, new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-
-                });
+                var settingsJson = JsonSerializer.Serialize(settings, JsonOptions.Value);
                 using (var writer = new StreamWriter(_environment.FileSystem.CreateStream(configFileName)))
                     writer.Write(settingsJson);
                 _config = null;
@@ -118,7 +119,7 @@ namespace Eryph.ClientRuntime.Configuration
         {
             var settings = GetSettings();
 
-            settings.Endpoints = settings.Endpoints ?? new Dictionary<string, Uri>();
+            settings.Endpoints ??= new Dictionary<string, Uri>();
 
             if (settings.Endpoints.ContainsKey(endpointName))
                 settings.Endpoints.Remove(endpointName);
@@ -132,7 +133,7 @@ namespace Eryph.ClientRuntime.Configuration
         public void RemoveClient(string clientId)
         {
             var settings = GetSettings();
-            settings.Clients = settings.Clients ?? new List<ClientData>();
+            settings.Clients ??= new List<ClientData>();
             settings.Clients = new List<ClientData>(settings.Clients.Where(x => x.Id != clientId));
 
             SaveSettings(settings);

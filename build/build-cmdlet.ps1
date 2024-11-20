@@ -1,49 +1,35 @@
-param ($Configuration = "Debug", $OutputDir = ".")
+#Requires -Version 7.4
+<#
+    .SYNOPSIS
+        Prepare the Powershell module for publication.
+    .DESCRIPTION
+        This script moves the already built Powershell module to a location
+        where the release pipeline will pick it up for publication.
+        The name and output location of this script cannot be changed as
+        it would break the release pipeline.
+#>
+[CmdletBinding()]
+param (
+    [Parameter()]
+    [string]
+    [ValidateNotNullOrEmpty()]
+    $Configuration,
+    [Parameter()]
+    [string]
+    [ValidateScript({ Test-Path $_ }, ErrorMessage = "The path '{0}' is invalid.")]
+    $OutputDir
+)
 
-$cmdletName = "Eryph.ClientRuntime.Configuration"
-$excludedFiles = @("System.Management.Automation.dll", "JetBrains.Annotations.dll")
+$ErrorActionPreference = 'Stop'
+$moduleName = "Eryph.ClientRuntime.Configuration"
 
-# If this script is not running on a build server, remind user to 
-# set environment variables so that this script can be debugged
-if(-not ($Env:GITVERSION_MajorMinorPatch))
-{
-    Write-Error "You must set the following environment variables"
-    Write-Error "to test this script interactively (values are examples)"
-    Write-Host '$Env:GITVERSION_MajorMinorPatch = "1.0.0"'
-    Write-Host '$Env:GITVERSION_NuGetPreReleaseTag = "ci0030"'
-    exit 1
+$repositoryPath = Resolve-Path (Join-Path $PSScriptRoot "..")
+$targetPath = Join-Path $OutputDir "cmdlet"
+
+if (Test-Path $targetPath ) {
+    Remove-Item $targetPath -Force -Recurse
 }
+$null = New-Item -ItemType Directory $targetPath
 
-
-Push-Location $PSScriptRoot
-cd ..
-$rootDir = Get-Location
-
-Push-Location $OutputDir
-
-if(Test-Path cmdlet ) {
-    rm cmdlet -Force -Recurse  -ErrorAction Stop
-}
-
-mkdir cmdlet | Out-Null
-cd cmdlet
-mkdir ${cmdletName} | Out-Null
-cd ${cmdletName}
-
-mkdir coreclr | Out-Null
-mkdir desktop | Out-Null
-
-cp $rootDir\build\${cmdletName}* .
-cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\net6.0\* coreclr -Exclude $excludedFiles -Recurse
-cp $rootDir\src\${cmdletName}.Commands\bin\${Configuration}\net462\* desktop  -Exclude $excludedFiles  -Recurse
-
-$config = gc "${cmdletName}.psd1" -Raw
-$config = $config.Replace("ModuleVersion = '0.1'", "ModuleVersion = '${Env:GITVERSION_MajorMinorPatch}'");
-
-if(-not [string]::IsNullOrWhiteSpace($Env:GITVERSION_NuGetPreReleaseTag)) {
-    $config = $config.Replace("# Prerelease = ''", "Prerelease = '${Env:GITVERSION_NuGetPreReleaseTag}'");
-}
-
-$config | sc "${cmdletName}.psd1"
-
-Pop-Location
+$modulePath = Join-Path $repositoryPath "src" "$moduleName.Commands" "bin" $Configuration "PsModule" 
+Copy-Item $modulePath\* $targetPath -Recurse

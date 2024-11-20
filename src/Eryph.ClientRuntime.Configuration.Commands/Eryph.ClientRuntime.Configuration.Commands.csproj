@@ -1,25 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;net6.0</TargetFrameworks>
+    <TargetFrameworks>net462;net8.0</TargetFrameworks>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RootNamespace>Eryph.ClientRuntime.Configuration</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="PowerShellStandard.Library" Version="5.1.1">
+  <ItemGroup>
+    <PackageReference Include="PowerShellStandard.Library" Version="5.1.1">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Eryph.ClientRuntime.Configuration\Eryph.ClientRuntime.Configuration.csproj" />
     <ProjectReference Include="..\Eryph.ClientRuntime.Powershell\Eryph.ClientRuntime.Powershell.csproj" />
   </ItemGroup>
+
+  <!-- Custom properties and targets for packaging the Powershell module -->
+  <PropertyGroup>
+    <PsModuleName>Eryph.ClientRuntime.Configuration</PsModuleName>
+    <PowershellExecutable>pwsh.exe</PowershellExecutable>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <PowershellExecutable>powershell.exe</PowershellExecutable>
+  </PropertyGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="pwsh.exe -NoProfile -File &quot;$(ProjectDir)../../build/Package-PsModule.ps1&quot; -ModuleName &quot;$(PsModuleName)&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(ProjectDir), 'bin', $(Configuration)))&quot; -TargetPath &quot;$(TargetPath)&quot; -TargetFramework &quot;$(TargetFramework)&quot; -MajorMinorPatch &quot;$(GitVersion_MajorMinorPatch)&quot; -NuGetPreReleaseTag &quot;$(GitVersion_NuGetPreReleaseTag)&quot;" />
+  </Target>
+  <Target Name="PostClean" AfterTargets="Clean">
+    <Exec Command="pwsh.exe -NoProfile -File &quot;$(ProjectDir)../../build/Clean-PsModule.ps1&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(ProjectDir), 'bin', $(Configuration)))&quot;" />
+  </Target>
 
 </Project>
