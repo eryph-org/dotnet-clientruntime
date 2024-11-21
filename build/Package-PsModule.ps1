@@ -45,7 +45,7 @@ $moduleAssemblyPath = Join-Path $modulePath ($isWindowsPowershell  ? 'desktop' :
 
 # Prepare the output directory
 if (-not (Test-Path $modulePath)) {
-    $null = New-Item -ItemType Directory -Path $modulePath
+    $null = New-Item -ItemType Directory -Path $modulePath -ErrorAction SilentlyContinue
 }
 
 # Copy the build output
