@@ -22,17 +22,24 @@
   <!-- Custom properties and targets for packaging the Powershell module -->
   <PropertyGroup>
     <PsModuleName>Eryph.ClientRuntime.Configuration</PsModuleName>
+    <GitVersionTargetsBefore>$(GitVersionTargetsBefore);PreparePsModule</GitVersionTargetsBefore>
     <PowershellExecutable>pwsh.exe</PowershellExecutable>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <PowershellExecutable>powershell.exe</PowershellExecutable>
   </PropertyGroup>
   
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="pwsh.exe -NoProfile -File &quot;$(ProjectDir)../../build/Package-PsModule.ps1&quot; -ModuleName &quot;$(PsModuleName)&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(ProjectDir), 'bin', $(Configuration)))&quot; -TargetPath &quot;$(TargetPath)&quot; -TargetFramework &quot;$(TargetFramework)&quot; -MajorMinorPatch &quot;$(GitVersion_MajorMinorPatch)&quot; -NuGetPreReleaseTag &quot;$(GitVersion_NuGetPreReleaseTag)&quot;" />
+  <Target Name="PreparePsModule" BeforeTargets="DispatchToInnerBuilds">
+    <Exec Command="pwsh.exe -NoProfile -File &quot;$([System.IO.Path]::Combine($(MSBuildProjectDirectory), '..', '..', 'build', 'Prepare-PsModule.ps1'))&quot; -ModuleName &quot;$(PsModuleName)&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(MSBuildProjectDirectory), 'bin', $(Configuration)))&quot; -MajorMinorPatch &quot;$(GitVersion_MajorMinorPatch)&quot; -NuGetPreReleaseTag &quot;$(GitVersion_NuGetPreReleaseTag)&quot;" />
+  </Target>
+  <Target Name="PopulatePsModule" AfterTargets="PostBuildEvent">
+    <Exec Command="pwsh.exe -NoProfile -File &quot;$([System.IO.Path]::Combine($(MSBuildProjectDirectory), '..', '..', 'build', 'Populate-PsModule.ps1'))&quot; -ModuleName &quot;$(PsModuleName)&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(MSBuildProjectDirectory), 'bin', $(Configuration)))&quot; -TargetPath &quot;$(TargetPath)&quot; -TargetFramework &quot;$(TargetFramework)&quot;" />
+  </Target>
+  <Target Name="TestPsModule" AfterTargets="DispatchToInnerBuilds">
+    <Exec Command="pwsh.exe -NoProfile -File &quot;$([System.IO.Path]::Combine($(MSBuildProjectDirectory), '..', '..', 'build', 'Test-PsModule.ps1'))&quot; -ModuleName &quot;$(PsModuleName)&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(MSBuildProjectDirectory), 'bin', $(Configuration)))&quot;" />
   </Target>
   <Target Name="PostClean" AfterTargets="Clean">
-    <Exec Command="pwsh.exe -NoProfile -File &quot;$(ProjectDir)../../build/Clean-PsModule.ps1&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(ProjectDir), 'bin', $(Configuration)))&quot;" />
+    <Exec Command="pwsh.exe -NoProfile -File &quot;$([System.IO.Path]::Combine($(MSBuildProjectDirectory), '..', '..', 'build', 'Clean-PsModule.ps1'))&quot; -OutputDirectory &quot;$([System.IO.Path]::Combine($(MSBuildProjectDirectory), 'bin', $(Configuration)))&quot;" />
   </Target>
 
 </Project>
