@@ -60,7 +60,7 @@ namespace Eryph.ClientRuntime.Configuration
                     if (keyPair == null)
                     {
                         WriteError(new ErrorRecord(
-                            new InvalidOperationException("Invalid InputObject. InputObject has be a SecureString with private key or a PCKS8 private key string."),
+                            new InvalidOperationException("Invalid InputObject. InputObject has be a SecureString with private key or a PKCS1 private key string."),
                             $"EryphClientCredentials{ErrorCategory.InvalidArgument}", ErrorCategory.InvalidArgument, inputObject));
                         continue;
                     }
