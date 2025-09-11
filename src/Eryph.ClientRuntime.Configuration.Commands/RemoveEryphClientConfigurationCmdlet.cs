@@ -21,15 +21,11 @@ namespace Eryph.ClientRuntime.Configuration
 
         /// <summary>
         /// This parameter overrides the ShouldContinue call to force
-        /// the cmdlet to stop its operation. This parameter should always
+        /// the configuration to be removed. This parameter should always
         /// be used with caution.
         /// </summary>
         [Parameter]
-        public SwitchParameter Force
-        {
-            get => _force;
-            set => _force = value;
-        }
+        public SwitchParameter Force { get; set; }
 
         /// <summary>
         /// This parameter indicates that the cmdlet should return
@@ -37,15 +33,9 @@ namespace Eryph.ClientRuntime.Configuration
         /// completed.
         /// </summary>
         [Parameter]
-        public SwitchParameter PassThru
-        {
-            get => _passThru;
-            set => _passThru = value;
-        }
+        public SwitchParameter PassThru { get; set; }
 
         private bool _yesToAll, _noToAll;
-        private bool _passThru;
-        private bool _force;
 
         protected override void BeginProcessing()
         {
@@ -65,15 +55,14 @@ namespace Eryph.ClientRuntime.Configuration
                     {
                         WriteError(new ErrorRecord(new InvalidOperationException($"Client with id '{id}' not found in configuration '{GetConfigurationName()}'."),
                             $"{nameof(EryphClientConfiguration)}{ErrorCategory.ObjectNotFound}",
-                            ErrorCategory.ObjectNotFound, Id));
+                            ErrorCategory.ObjectNotFound, id));
                         continue;
                     }
                     
                     var storesWriter = GetStoresWriter();
                     if (!ShouldProcess(id)) continue;
 
-                    if (!ShouldContinue($"The client with {id} will be deleted permanently.", "Warning!",
-                        ref _yesToAll, ref _noToAll))
+                    if (!Force && !ShouldContinue($"The client with {id} will be deleted permanently.", "Warning!", ref _yesToAll, ref _noToAll))
                     {
                         continue;
                     }
@@ -82,7 +71,7 @@ namespace Eryph.ClientRuntime.Configuration
                     if (storesWriter.GetDefaultClientId() == id)
                         storesWriter.SetDefaultClient(null);
 
-                    if(_passThru)
+                    if (PassThru)
                         WriteObject(ToOutput(currentClientData, GetConfigurationName()));
                 }
                 catch (InvalidOperationException ex)
