@@ -80,7 +80,9 @@ CmdletsToExport = @(
     "Remove-EryphClientConfiguration",
     "New-EryphClientCredentials",
     "Get-EryphClientCredentials",
-    "Set-EryphConfigurationStore"
+    "Set-EryphConfigurationStore",
+    "Set-EryphSessionCredentials",
+    "Clear-EryphSessionCredentials"
 )
 
 # Variables to export from this module
